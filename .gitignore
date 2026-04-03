@@ -1,0 +1,22 @@
+.venv/
+.vendor/
+__pycache__/
+*.pyc
+
+data/app_state.json
+data/app_state.tmp
+data/app.db
+data/app.db-journal
+data/write-test.txt
+data/combined-2022-2025.xlsx
+data/combined-2022-2025-no-anomaly.xlsx
+data/data-asli/
+
+storage/uploads/
+storage/generated/
+
+Skripsi 123 final (pake yg ini).pdf
+proposal.txt
+
+.DS_Store
+Thumbs.db

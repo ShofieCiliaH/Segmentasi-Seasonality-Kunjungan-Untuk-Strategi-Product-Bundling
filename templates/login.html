@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="login-card">
+    <div class="login-copy">
+      <p class="eyebrow">Padusan</p>
+      <h2>Masuk ke dashboard rekomendasi bundling</h2>
+      <p>
+        Sistem ini membaca file transaksi wisata, membersihkannya, menjalankan
+        Agglomerative Hierarchical Clustering, lalu merumuskan strategi paket
+        berbasis seasonality.
+      </p>
+      <div class="login-note">
+        <strong>Akun demo:</strong>
+        <span>`stafit` / `Padusan2026!`</span>
+        <span>`marketing` / `Padusan2026!`</span>
+      </div>
+    </div>
+
+    <form method="post" class="panel">
+      <label>
+        Username
+        <input type="text" name="username" placeholder="stafit" required>
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" placeholder="Padusan2026!" required>
+      </label>
+      <button type="submit">Masuk ke Sistem</button>
+    </form>
+  </section>
+{% endblock %}

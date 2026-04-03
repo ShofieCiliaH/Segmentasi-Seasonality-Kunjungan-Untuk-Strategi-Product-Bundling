@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="dashboard-grid">
+    <aside class="sidebar">
+      <article class="panel">
+        <p class="eyebrow">Panel Kontrol</p>
+        <h2>Unggah data dan jalankan analisis</h2>
+        <form method="post" action="{{ url_for('analyze') }}" enctype="multipart/form-data" class="stack-form">
+          <label>
+            File transaksi (.xlsx / .csv)
+            <input type="file" name="data_file" accept=".xlsx,.csv">
+          </label>
+
+          <label>
+            Manual override jumlah cluster
+            <input
+              type="number"
+              name="manual_k"
+              min="2"
+              max="{{ analysis.candidate_scores[-1].k if analysis else 6 }}"
+              value="{{ analysis.active_k if analysis else '' }}"
+              placeholder="Kosongkan untuk rekomendasi otomatis">
+          </label>
+
+          {% if analysis %}
+            <input type="hidden" name="source_path" value="{{ analysis.source_path }}">
+            <input type="hidden" name="source_name" value="{{ analysis.source_name }}">
+          {% endif %}
+
+          <button type="submit">{{ "Terapkan / Update" if analysis else "Upload & Analisis" }}</button>
+        </form>
+      </article>
+
+      <article class="panel">
+        <p class="eyebrow">Status Sistem</p>
+        {% if analysis %}
+          <ul class="metric-list">
+            <li><span>File aktif</span><strong>{{ analysis.source_name }}</strong></li>
+            <li><span>k rekomendasi</span><strong>{{ analysis.recommended_k }}</strong></li>
+            <li><span>k aktif</span><strong>{{ analysis.active_k }}</strong></li>
+            <li><span>Silhouette</span><strong>{{ analysis.active_silhouette }}</strong></li>
+            <li><span>Hari dianalisis</span><strong>{{ analysis.days_analysed }}</strong></li>
+          </ul>
+        {% else %}
+          <p class="muted">
+            Belum ada analisis aktif. Unggah file transaksi terlebih dahulu untuk melihat
+            rekomendasi cluster, dendrogram, dan formulasi bundling.
+          </p>
+        {% endif %}
+      </article>
+
+      <article class="panel">
+        <p class="eyebrow">Riwayat Cepat</p>
+        {% if history_preview %}
+          <div class="history-preview">
+            {% for item in history_preview %}
+              <a href="{{ url_for('history_detail', history_id=item.history_id) }}" class="history-item">
+                <strong>{{ item.source_name }}</strong>
+                <span>{{ item.tanggal_proses }}</span>
+                <small>{{ item.summary }}</small>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="muted">Riwayat analisis akan muncul di sini setelah eksekusi pertama.</p>
+        {% endif %}
+      </article>
+    </aside>
+
+    <section class="content-area">
+      <article class="hero panel panel-hero">
+        <p class="eyebrow">Dashboard Terintegrasi</p>
+        <h2>Segmentasi seasonality kunjungan untuk strategi product bundling</h2>
+        <p>
+          Rangkaian proses yang berjalan mengikuti proposal skripsi Anda: cleaning,
+          generalisasi kategori produk, pivot harian, normalisasi Min-Max, AHC Ward,
+          evaluasi silhouette, profiling cluster, dan rekomendasi paket.
+        </p>
+      </article>
+
+      {% if analysis %}
+        <section class="metrics-grid">
+          <article class="metric-card">
+            <span>Baris Awal</span>
+            <strong>{{ analysis.rows_initial }}</strong>
+          </article>
+          <article class="metric-card">
+            <span>Baris Valid</span>
+            <strong>{{ analysis.rows_cleaned }}</strong>
+          </article>
+          <article class="metric-card">
+            <span>Kategori</span>
+            <strong>{{ analysis.categories|length }}</strong>
+          </article>
+          <article class="metric-card">
+            <span>Laporan</span>
+            {% if analysis.report_url %}
+              <a href="{{ analysis.report_url }}" class="inline-link">Unduh PDF</a>
+            {% else %}
+              <strong>-</strong>
+            {% endif %}
+          </article>
+        </section>
+
+        <article class="panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Visualisasi</p>
+              <h3>Dendrogram AHC</h3>
+            </div>
+            <div class="pill-row">
+              {% for candidate in analysis.candidate_scores %}
+                <span class="pill {{ 'pill-active' if candidate.k == analysis.active_k else '' }}">
+                  k={{ candidate.k }} | {{ candidate.score }}
+                </span>
+              {% endfor %}
+            </div>
+          </div>
+          {% if analysis.plot_url %}
+            <img src="{{ analysis.plot_url }}" alt="Dendrogram hasil clustering" class="dendrogram">
+          {% endif %}
+        </article>
+
+        <article class="panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Formulasi Hasil</p>
+              <h3>Profil cluster dan strategi bundling</h3>
+            </div>
+          </div>
+          <div class="cluster-grid">
+            {% for cluster in analysis.cluster_profiles %}
+              <article class="cluster-card">
+                <div class="cluster-head">
+                  <h4>{{ cluster.cluster_name }}</h4>
+                  <span>{{ cluster.segment_label }}</span>
+                </div>
+                <p>{{ cluster.profile_text }}</p>
+                <ul class="detail-list">
+                  <li><span>Paket</span><strong>{{ cluster.package_name }}</strong></li>
+                  <li><span>Komposisi</span><strong>{{ cluster.package_components }}</strong></li>
+                  <li><span>Target</span><strong>{{ cluster.target_season }}</strong></li>
+                  <li><span>Jumlah hari</span><strong>{{ cluster.day_count }}</strong></li>
+                  <li><span>Rentang data</span><strong>{{ cluster.date_span }}</strong></li>
+                </ul>
+              </article>
+            {% endfor %}
+          </div>
+        </article>
+
+        <div class="table-grid">
+          <article class="panel">
+            <p class="eyebrow">Preview Data Bersih</p>
+            <h3>Hasil cleaning dan kategorisasi</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    {% for key in analysis.raw_preview[0].keys() %}
+                      <th>{{ key }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in analysis.raw_preview %}
+                    <tr>
+                      {% for value in row.values() %}
+                        <td>{{ value }}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <p class="eyebrow">Preview Matriks Harian</p>
+            <h3>Pivot time-series untuk clustering</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    {% for key in analysis.matrix_preview[0].keys() %}
+                      <th>{{ key }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for row in analysis.matrix_preview %}
+                    <tr>
+                      {% for value in row.values() %}
+                        <td>{{ value }}</td>
+                      {% endfor %}
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+
+        <div class="table-grid">
+          <article class="panel">
+            <p class="eyebrow">Ringkasan Cleaning</p>
+            <h3>Baris yang dieliminasi</h3>
+            <div class="table-wrap compact-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Aturan</th>
+                    <th>Jumlah</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for key, value in analysis.cleaning_summary.items() %}
+                    <tr>
+                      <td>{{ key }}</td>
+                      <td>{{ value }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <p class="eyebrow">Outlier Monitoring</p>
+            <h3>Legitimate spikes yang terdeteksi</h3>
+            {% if analysis.outlier_summary %}
+              <div class="outlier-list">
+                {% for outlier in analysis.outlier_summary %}
+                  <article class="outlier-item">
+                    <strong>{{ outlier.kategori }}</strong>
+                    <span>{{ outlier.jumlah_outlier }} tanggal di luar pagar IQR</span>
+                    <small>
+                      {% for contoh in outlier.contoh %}
+                        {{ contoh.tanggal }}: {{ contoh.nilai }}{% if not loop.last %} | {% endif %}
+                      {% endfor %}
+                    </small>
+                  </article>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="muted">Tidak ada outlier signifikan pada rentang data yang dianalisis.</p>
+            {% endif %}
+          </article>
+        </div>
+      {% else %}
+        <article class="panel empty-state">
+          <p class="eyebrow">Belum Ada Hasil</p>
+          <h3>Mulai dari file transaksi harian Padusan</h3>
+          <p>
+            Gunakan file `.xlsx` atau `.csv` yang memiliki kolom minimal
+            <strong>Tanggal</strong>, <strong>Nama Tiket</strong>, dan
+            <strong>Jumlah</strong>. Sistem akan mengurus preprocessing, clustering,
+            dan penyusunan rekomendasi paket secara otomatis.
+          </p>
+        </article>
+      {% endif %}
+    </section>
+  </section>
+{% endblock %}

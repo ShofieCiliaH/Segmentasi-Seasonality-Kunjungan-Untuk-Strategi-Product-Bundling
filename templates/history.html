@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Arsip Strategi</p>
+        <h2>Riwayat analisis yang pernah dijalankan</h2>
+      </div>
+      <a href="{{ url_for('dashboard') }}" class="ghost-button as-link">Kembali ke Dashboard</a>
+    </div>
+
+    {% if analyses %}
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>File</th>
+              <th>Eksekutor</th>
+              <th>k Aktif</th>
+              <th>Silhouette</th>
+              <th>Ringkasan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in analyses %}
+              <tr>
+                <td>{{ item.tanggal_proses }}</td>
+                <td>{{ item.source_name }}</td>
+                <td>{{ item.analyst_name }}</td>
+                <td>{{ item.active_k }}</td>
+                <td>{{ item.active_silhouette }}</td>
+                <td>{{ item.summary }}</td>
+                <td>
+                  <a href="{{ url_for('history_detail', history_id=item.history_id) }}" class="inline-link">
+                    Lihat Detail
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="muted">Belum ada riwayat analisis yang tersimpan.</p>
+    {% endif %}
+  </section>
+{% endblock %}

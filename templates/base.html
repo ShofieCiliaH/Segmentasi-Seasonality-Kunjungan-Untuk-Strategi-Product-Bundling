@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ app_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Sistem Analisis Skripsi</p>
+        <h1>{{ app_name }}</h1>
+      </div>
+      {% if current_user %}
+        <nav class="topnav">
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('history') }}">Riwayat</a>
+          <div class="user-badge">
+            <span>{{ current_user["nama_lengkap"] }}</span>
+            <small>{{ current_user["role"] }}</small>
+          </div>
+          <form method="post" action="{{ url_for('logout') }}">
+            <button type="submit" class="ghost-button">Logout</button>
+          </form>
+        </nav>
+      {% endif %}
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <section class="flash-stack">
+          {% for category, message in messages %}
+            <article class="flash flash-{{ category }}">{{ message }}</article>
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>
