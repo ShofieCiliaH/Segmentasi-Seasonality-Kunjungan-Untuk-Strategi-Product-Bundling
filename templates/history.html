@@ -1,16 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <section class="panel">
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Arsip Strategi</p>
-        <h2>Riwayat analisis yang pernah dijalankan</h2>
+  <section class="detail-stack">
+    <article class="panel panel-hero">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Arsip Strategi</p>
+          <h2>Riwayat analisis yang pernah dijalankan</h2>
+          <p class="muted">Seluruh eksekusi analisis tersimpan agar hasil segmentasi bisa ditinjau ulang, dibandingkan, dan dijalankan kembali.</p>
+        </div>
+        <a href="{{ url_for('dashboard') }}" class="ghost-button as-link">Kembali ke Dashboard</a>
       </div>
-      <a href="{{ url_for('dashboard') }}" class="ghost-button as-link">Kembali ke Dashboard</a>
-    </div>
+      <div class="hero-badge-row">
+        <span class="hero-badge">History Tracking</span>
+        <span class="hero-badge">Analisis Ulang</span>
+        <span class="hero-badge">PDF Report</span>
+      </div>
+    </article>
 
-    {% if analyses %}
+    <article class="panel">
+      {% if analyses %}
       <div class="table-wrap">
         <table>
           <thead>
@@ -43,8 +52,9 @@
           </tbody>
         </table>
       </div>
-    {% else %}
-      <p class="muted">Belum ada riwayat analisis yang tersimpan.</p>
-    {% endif %}
+      {% else %}
+        <p class="muted">Belum ada riwayat analisis yang tersimpan.</p>
+      {% endif %}
+    </article>
   </section>
 {% endblock %}

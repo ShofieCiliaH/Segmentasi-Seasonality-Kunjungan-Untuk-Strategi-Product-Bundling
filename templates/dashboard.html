@@ -3,9 +3,10 @@
 {% block content %}
   <section class="dashboard-grid">
     <aside class="sidebar">
-      <article class="panel">
+      <article class="panel panel-soft">
         <p class="eyebrow">Panel Kontrol</p>
         <h2>Unggah data dan jalankan analisis</h2>
+        <p class="muted">Pilih file transaksi terbaru atau gunakan sumber data sebelumnya untuk simulasi ulang jumlah cluster.</p>
         <form method="post" action="{{ url_for('analyze') }}" enctype="multipart/form-data" class="stack-form">
           <label>
             File transaksi (.xlsx / .csv)
@@ -22,6 +23,7 @@
               value="{{ analysis.active_k if analysis else '' }}"
               placeholder="Kosongkan untuk rekomendasi otomatis">
           </label>
+          <p class="field-hint">Biarkan kosong jika ingin sistem memilih nilai k terbaik berdasarkan silhouette score.</p>
 
           {% if analysis %}
             <input type="hidden" name="source_path" value="{{ analysis.source_path }}">
@@ -32,7 +34,7 @@
         </form>
       </article>
 
-      <article class="panel">
+      <article class="panel panel-soft">
         <p class="eyebrow">Status Sistem</p>
         {% if analysis %}
           <ul class="metric-list">
@@ -50,7 +52,7 @@
         {% endif %}
       </article>
 
-      <article class="panel">
+      <article class="panel panel-soft">
         <p class="eyebrow">Riwayat Cepat</p>
         {% if history_preview %}
           <div class="history-preview">
@@ -70,13 +72,61 @@
 
     <section class="content-area">
       <article class="hero panel panel-hero">
-        <p class="eyebrow">Dashboard Terintegrasi</p>
-        <h2>Segmentasi seasonality kunjungan untuk strategi product bundling</h2>
-        <p>
-          Rangkaian proses yang berjalan mengikuti proposal skripsi Anda: cleaning,
-          generalisasi kategori produk, pivot harian, normalisasi Min-Max, AHC Ward,
-          evaluasi silhouette, profiling cluster, dan rekomendasi paket.
-        </p>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">{{ "Dashboard Terintegrasi" if analysis else "Panduan Mulai" }}</p>
+            <h2>{{ "Segmentasi seasonality kunjungan untuk strategi product bundling" if analysis else "Mulai analisis dari file transaksi Anda dalam tiga langkah sederhana" }}</h2>
+            <p>
+              {% if analysis %}
+                Rangkaian proses yang berjalan mengikuti proposal skripsi Anda: cleaning,
+                generalisasi kategori produk, pivot harian, normalisasi Min-Max, AHC Ward,
+                evaluasi silhouette, profiling cluster, dan rekomendasi paket.
+              {% else %}
+                Dashboard ini sengaja dibuat bertahap agar mudah dipahami pengguna umum.
+                Unggah file transaksi, jalankan analisis, lalu sistem akan menampilkan
+                dendrogram, profil cluster, dan rekomendasi bundling secara otomatis.
+              {% endif %}
+            </p>
+            <div class="hero-badge-row">
+              {% if analysis %}
+                <span class="hero-badge">Ward Linkage</span>
+                <span class="hero-badge">Euclidean Distance</span>
+                <span class="hero-badge">Min-Max Scaling</span>
+              {% else %}
+                <span class="hero-badge">1. Upload Data</span>
+                <span class="hero-badge">2. Jalankan Analisis</span>
+                <span class="hero-badge">3. Baca Hasil</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="hero-aside">
+            {% if analysis %}
+              <div class="hero-stat-grid">
+                <article class="hero-stat">
+                  <span>Dataset aktif</span>
+                  <strong>{{ analysis.source_name }}</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Silhouette</span>
+                  <strong>{{ analysis.active_silhouette }}</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Cluster aktif</span>
+                  <strong>k = {{ analysis.active_k }}</strong>
+                </article>
+                <article class="hero-stat">
+                  <span>Hari dianalisis</span>
+                  <strong>{{ analysis.days_analysed }}</strong>
+                </article>
+              </div>
+            {% else %}
+              <div class="hero-callout">
+                <strong>Belum ada analisis aktif</strong>
+                <span>Hasil visual seperti dendrogram dan grafik akan muncul setelah Anda mengunggah file dan menekan tombol analisis.</span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </article>
 
       {% if analysis %}
@@ -131,10 +181,13 @@
           </div>
           <div class="cluster-grid">
             {% for cluster in analysis.cluster_profiles %}
-              <article class="cluster-card">
+              <article class="cluster-card {{ 'cluster-card-stay' if 'Staycation' in cluster.segment_label else 'cluster-card-peak' if 'High Season' in cluster.segment_label or 'Mixed' in cluster.segment_label else 'cluster-card-calm' }}">
                 <div class="cluster-head">
-                  <h4>{{ cluster.cluster_name }}</h4>
-                  <span>{{ cluster.segment_label }}</span>
+                  <div>
+                    <h4>{{ cluster.cluster_name }}</h4>
+                    <span class="cluster-tag">{{ cluster.segment_label }}</span>
+                  </div>
+                  <span class="cluster-days">{{ cluster.day_count }} hari</span>
                 </div>
                 <p>{{ cluster.profile_text }}</p>
                 <ul class="detail-list">
@@ -248,15 +301,61 @@
           </article>
         </div>
       {% else %}
-        <article class="panel empty-state">
-          <p class="eyebrow">Belum Ada Hasil</p>
-          <h3>Mulai dari file transaksi harian Padusan</h3>
-          <p>
-            Gunakan file `.xlsx` atau `.csv` yang memiliki kolom minimal
-            <strong>Tanggal</strong>, <strong>Nama Tiket</strong>, dan
-            <strong>Jumlah</strong>. Sistem akan mengurus preprocessing, clustering,
-            dan penyusunan rekomendasi paket secara otomatis.
-          </p>
+        <article class="panel onboarding-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Belum Ada Hasil</p>
+              <h3>Dashboard akan menampilkan hasil setelah analisis dijalankan</h3>
+            </div>
+            {% if history_preview %}
+              <a href="{{ url_for('dashboard', analysis_id=history_preview[0].history_id) }}" class="ghost-button as-link">
+                Buka Hasil Terakhir
+              </a>
+            {% endif %}
+          </div>
+
+          <div class="onboarding-grid">
+            <article class="onboarding-card">
+              <span class="step-badge">Langkah 1</span>
+              <h4>Siapkan file transaksi</h4>
+              <p>Gunakan file `.xlsx` atau `.csv` yang memuat minimal kolom <strong>Tanggal</strong>, <strong>Nama Tiket</strong>, dan <strong>Jumlah</strong>.</p>
+            </article>
+
+            <article class="onboarding-card">
+              <span class="step-badge">Langkah 2</span>
+              <h4>Unggah dan jalankan analisis</h4>
+              <p>Masukkan file pada panel kiri, lalu klik <strong>Upload & Analisis</strong>. Jika perlu, Anda bisa mengatur jumlah cluster secara manual.</p>
+            </article>
+
+            <article class="onboarding-card">
+              <span class="step-badge">Langkah 3</span>
+              <h4>Baca hasil secara bertahap</h4>
+              <p>Setelah proses selesai, sistem akan menampilkan nilai silhouette, dendrogram, profil cluster, riwayat, dan laporan PDF.</p>
+            </article>
+          </div>
+
+          <div class="empty-state-helper">
+            <article class="helper-card">
+              <h4>Apa yang akan muncul setelah analisis?</h4>
+              <ul class="helper-list">
+                <li>Ringkasan kualitas data dan jumlah hari yang dianalisis</li>
+                <li>Dendrogram Agglomerative Hierarchical Clustering</li>
+                <li>Profil masing-masing cluster dan label sistem</li>
+                <li>Rekomendasi strategi product bundling</li>
+              </ul>
+            </article>
+
+            <article class="helper-card">
+              <h4>Jika sudah pernah analisis sebelumnya</h4>
+              <p class="muted">Anda tidak harus mengunggah ulang file. Anda bisa membuka hasil yang pernah disimpan melalui riwayat, lalu melakukan analisis ulang dengan jumlah cluster berbeda.</p>
+              <div class="helper-actions">
+                <a href="{{ url_for('history') }}" class="ghost-button as-link">Lihat Riwayat</a>
+                {% if history_preview %}
+                  <a href="{{ url_for('dashboard', analysis_id=history_preview[0].history_id) }}" class="ghost-button as-link">Tampilkan Hasil Terakhir</a>
+                {% endif %}
+              </div>
+            </article>
+          </div>
         </article>
       {% endif %}
     </section>

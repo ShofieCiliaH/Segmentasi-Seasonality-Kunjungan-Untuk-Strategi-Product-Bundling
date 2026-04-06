@@ -2,11 +2,12 @@
 
 {% block content %}
   <section class="detail-stack">
-    <article class="panel">
+    <article class="panel panel-hero">
       <div class="section-head">
         <div>
           <p class="eyebrow">Detail Riwayat</p>
           <h2>{{ analysis.source_name }}</h2>
+          <p class="muted">Tinjau kembali konfigurasi analisis, hasil segmentasi, dan laporan yang sudah pernah disimpan.</p>
         </div>
         <div class="detail-actions">
           {% if analysis.report_url %}
@@ -16,17 +17,35 @@
         </div>
       </div>
 
-      <ul class="metric-list two-col">
-        <li><span>Tanggal proses</span><strong>{{ analysis.tanggal_proses }}</strong></li>
-        <li><span>Eksekutor</span><strong>{{ analysis.analyst_name }}</strong></li>
-        <li><span>k rekomendasi</span><strong>{{ analysis.recommended_k }}</strong></li>
-        <li><span>k aktif</span><strong>{{ analysis.active_k }}</strong></li>
-        <li><span>Silhouette aktif</span><strong>{{ analysis.active_silhouette }}</strong></li>
-        <li><span>Hari dianalisis</span><strong>{{ analysis.days_analysed }}</strong></li>
-      </ul>
+      <div class="hero-stat-grid">
+        <article class="hero-stat">
+          <span>Tanggal proses</span>
+          <strong>{{ analysis.tanggal_proses }}</strong>
+        </article>
+        <article class="hero-stat">
+          <span>Eksekutor</span>
+          <strong>{{ analysis.analyst_name }}</strong>
+        </article>
+        <article class="hero-stat">
+          <span>k rekomendasi</span>
+          <strong>{{ analysis.recommended_k }}</strong>
+        </article>
+        <article class="hero-stat">
+          <span>k aktif</span>
+          <strong>{{ analysis.active_k }}</strong>
+        </article>
+        <article class="hero-stat">
+          <span>Silhouette aktif</span>
+          <strong>{{ analysis.active_silhouette }}</strong>
+        </article>
+        <article class="hero-stat">
+          <span>Hari dianalisis</span>
+          <strong>{{ analysis.days_analysed }}</strong>
+        </article>
+      </div>
     </article>
 
-    <article class="panel">
+    <article class="panel panel-soft">
       <p class="eyebrow">Re-run Cepat</p>
       <h3>Coba variasi jumlah cluster dari sumber data yang sama</h3>
       <form method="post" action="{{ url_for('analyze') }}" class="inline-form">
@@ -53,10 +72,13 @@
       <h3>Hasil segmentasi</h3>
       <div class="cluster-grid">
         {% for cluster in analysis.cluster_profiles %}
-          <article class="cluster-card">
+          <article class="cluster-card {{ 'cluster-card-stay' if 'Staycation' in cluster.segment_label else 'cluster-card-peak' if 'High Season' in cluster.segment_label or 'Mixed' in cluster.segment_label else 'cluster-card-calm' }}">
             <div class="cluster-head">
-              <h4>{{ cluster.cluster_name }}</h4>
-              <span>{{ cluster.segment_label }}</span>
+              <div>
+                <h4>{{ cluster.cluster_name }}</h4>
+                <span class="cluster-tag">{{ cluster.segment_label }}</span>
+              </div>
+              <span class="cluster-days">{{ cluster.day_count }} hari</span>
             </div>
             <p>{{ cluster.profile_text }}</p>
             <ul class="detail-list">

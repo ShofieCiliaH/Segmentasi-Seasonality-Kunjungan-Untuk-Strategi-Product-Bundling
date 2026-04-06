@@ -9,21 +9,27 @@
 <body>
   <div class="page-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">Sistem Analisis Skripsi</p>
-        <h1>{{ app_name }}</h1>
+      <div class="brand">
+        <div class="brand-mark">PW</div>
+        <div class="brand-copy">
+          <p class="eyebrow">Sistem Analisis Skripsi</p>
+          <h1>{{ app_name }}</h1>
+          <p class="brand-subtitle">Segmentasi seasonality kunjungan dan strategi product bundling berbasis data historis.</p>
+        </div>
       </div>
       {% if current_user %}
         <nav class="topnav">
-          <a href="{{ url_for('dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('history') }}">Riwayat</a>
-          <div class="user-badge">
-            <span>{{ current_user["nama_lengkap"] }}</span>
-            <small>{{ current_user["role"] }}</small>
+          <a href="{{ url_for('dashboard') }}" class="topnav-link {{ 'is-active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
+          <a href="{{ url_for('history') }}" class="topnav-link {{ 'is-active' if request.endpoint in ['history', 'history_detail'] else '' }}">Riwayat</a>
+          <div class="topnav-actions">
+            <div class="user-badge">
+              <span>{{ current_user["nama_lengkap"] }}</span>
+              <small>{{ current_user["role"] }}</small>
+            </div>
+            <form method="post" action="{{ url_for('logout') }}">
+              <button type="submit" class="ghost-button">Logout</button>
+            </form>
           </div>
-          <form method="post" action="{{ url_for('logout') }}">
-            <button type="submit" class="ghost-button">Logout</button>
-          </form>
         </nav>
       {% endif %}
     </header>

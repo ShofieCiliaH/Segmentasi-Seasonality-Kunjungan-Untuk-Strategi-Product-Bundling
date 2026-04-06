@@ -156,15 +156,12 @@ def logout():
 @login_required
 def dashboard():
     analysis_id = request.args.get("analysis_id", type=int) or session.get("current_analysis_id")
-    if analysis_id is None:
-        latest_history = fetch_recent_history(limit=1)
-        if latest_history:
-            analysis_id = latest_history[0]["id_riwayat"]
     analysis = None
     if analysis_id:
         record = fetch_analysis(analysis_id)
         if record:
             analysis = inflate_analysis(record)
+            session["current_analysis_id"] = analysis_id
 
     history_preview = [inflate_analysis(row) for row in fetch_recent_history(limit=5)]
     return render_template("dashboard.html", analysis=analysis, history_preview=history_preview)

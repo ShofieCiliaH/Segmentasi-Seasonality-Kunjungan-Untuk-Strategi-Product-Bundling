@@ -3,21 +3,45 @@
 {% block content %}
   <section class="login-card">
     <div class="login-copy">
-      <p class="eyebrow">Padusan</p>
-      <h2>Masuk ke dashboard rekomendasi bundling</h2>
+      <p class="eyebrow">Padusan Analytics</p>
+      <h2>Masuk ke dashboard analisis bundling yang lebih rapi dan siap pakai</h2>
       <p>
         Sistem ini membaca file transaksi wisata, membersihkannya, menjalankan
         Agglomerative Hierarchical Clustering, lalu merumuskan strategi paket
         berbasis seasonality.
       </p>
+      <div class="hero-badge-row">
+        <span class="hero-badge">AHC Ward</span>
+        <span class="hero-badge">Silhouette Score</span>
+        <span class="hero-badge">PDF Report</span>
+      </div>
+      <div class="login-feature-list">
+        <article class="mini-feature">
+          <strong>Unggah dataset harian</strong>
+          <span>File Excel atau CSV langsung diproses ke matriks harian.</span>
+        </article>
+        <article class="mini-feature">
+          <strong>Interpretasi cluster otomatis</strong>
+          <span>Setiap cluster diberi profil, label, dan rekomendasi bundling.</span>
+        </article>
+        <article class="mini-feature">
+          <strong>Riwayat dan laporan</strong>
+          <span>Hasil analisis dapat disimpan, ditinjau ulang, dan diunduh.</span>
+        </article>
+      </div>
       <div class="login-note">
-        <strong>Akun demo:</strong>
-        <span>`stafit` / `Padusan2026!`</span>
-        <span>`marketing` / `Padusan2026!`</span>
+        <strong>Akun demo</strong>
+        <span>stafit / Padusan2026!</span>
+        <span>marketing / Padusan2026!</span>
       </div>
     </div>
 
-    <form method="post" class="panel">
+    <form method="post" class="panel login-form-panel">
+      <div class="form-head">
+        <p class="eyebrow">Akses Sistem</p>
+        <h3>Login Pengguna</h3>
+        <p class="muted">Masukkan akun yang tersedia untuk membuka dashboard analitik.</p>
+      </div>
       <label>
         Username
         <input type="text" name="username" placeholder="stafit" required>
@@ -26,6 +50,7 @@
         Password
         <input type="password" name="password" placeholder="Padusan2026!" required>
       </label>
+      <p class="field-hint">Gunakan akun demo untuk mencoba tampilan dashboard, riwayat analisis, dan unduh laporan.</p>
       <button type="submit">Masuk ke Sistem</button>
     </form>
   </section>

@@ -1,0 +1,2882 @@
+        ANALISIS SEGMENTASI SEASONALITY
+KUNJUNGAN WISATA PADUSAN MENGGUNAKAN
+ ALGORITMA AGGLOMERATIVE HIERARCHICAL
+
+  CLUSTERING UNTUK PENENTUAN STRATEGI
+                    PRODUCT BUNDLING
+
+                                PROPOSAL SKRIPSI
+
+                          SHOFIE CILIA HERMAWAN
+                                    NIM 434221041
+
+             PROGRAM STUDI D4 TEKNIK INFORMATIKA
+                             DEPARTEMEN TEKNIK
+                                FAKULTAS VOKASI
+
+                          UNIVERSITAS AIRLANGGA
+                                           2026
+          LEMBAR PENGESAHAN NASKAH PROPOSAL
+
+Judul     : Analisis Segmentasi Seasonality Kunjungan Wisata Padusan
+
+          Menggunakan Algoritma Agglomerative Hierarchical
+
+          Clustering Untuk Penentuan Strategi Product Bundling
+
+Penyusun  : Shofie Cilia Hermawan
+
+NIM       : 434221041
+
+Pembimbing I : Tesa Eranti Putri S.Kom., M.Kom
+
+Tanggal Seminar : 15 Januari 2026
+
+                                Disetujui oleh:
+                                Pembimbing I,
+
+          Tesa Eranti Putri S.Kom., M.Kom
+              NIP. 198904232016033201
+
+       Ketua Departemen Teknik     Mengetahui,
+             Fakultas Vokasi                         Koordinator Program Studi
+                                                        D4 Teknik Informatika
+         Universitas Airlangga                              Fakultas Vokasi
+                                                         Universitas Airlangga
+
+       Drs. Eto Wuryanto, DEA.        Tesa Eranti Putri S.Kom., M.Kom
+       NIP 196609281991021001            NIP. 198904232016033201
+
+                                   i
+                                         KATA PENGANTAR
+
+         Puji syukur kehadirat Allah SWT atas rahmat-Nya, sehingga penulis dapat
+menyelesaikan Skripsi berjudul "Analisis Segmentasi Seasonality Kunjungan Wisata
+Padusan Menggunakan Algoritma Agglomerative Hierarchical Clustering Untuk
+Penentuan Strategi Product Bundling".
+
+         Skripsi ini disusun sebagai syarat menyelesaikan pendidikan Sarjana Terapan (D4)
+Teknik Informatika, Fakultas Vokasi, Universitas Airlangga. Penelitian ini bertujuan
+memberikan solusi berbasis data bagi PT Palawi Risorsis dalam merancang paket layanan
+wisata yang efektif.
+
+    Penulis menyadari keberhasilan ini tidak lepas dari dukungan banyak pihak. Oleh karena
+itu, penulis mengucapkan terima kasih kepada:
+
+    1. Kedua orang tua dan keluarga tercinta atas doa dan dukungan tanpa henti.
+    2. Ibu Tesa Eranti Putri S.Kom., M.Kom selaku pembimbing, atas arahan dan ilmunya
+
+         selama penyusunan skripsi.
+    3. Jajaran Pimpinan Fakultas Vokasi dan Prodi D4 Teknik Informatika Universitas
+
+         Airlangga.
+    4. Bapak Desanto Dwi Jaya Putro dan manajemen PT Palawi Risorsis yang telah
+
+         memfasilitasi data dan izin penelitian.
+    5. Teman-teman seperjuangan D4 Teknik Informatika Universitas Airlangga.
+Penulis menyadari skripsi ini masih memiliki kekurangan. Oleh karena itu, kritik dan saran
+yang membangun sangat diharapkan. Semoga karya ini bermanfaat.
+
+                                                                              Surabaya, 15 Januari 2025
+                                                                              Penyusun,
+
+                                                                              Shofie Cilia Hermawan
+
+                                                      ii
+                                              DAFTAR ISI
+
+LEMBAR PENGESAHAN NASKAH PROPOSAL............................................................. i
+KATA PENGANTAR ............................................................................................................ ii
+DAFTAR ISI.........................................................................................................................iii
+DAFTAR GAMBAR ............................................................................................................ iv
+DAFTAR TABEL .................................................................................................................. v
+BAB I PENDAHULUAN ..................................................................................................... 6
+
+   1.1 Latar Belakang............................................................................................................. 6
+   1.2 Rumusan Masalah........................................................................................................ 9
+   1.3 Tujuan Penelitian ......................................................................................................... 9
+   1.4 Manfaat Penelitian ....................................................................................................... 9
+   1.5 Batasan Masalah ........................................................................................................ 10
+BAB II TINJAUAN PUSTAKA ......................................................................................... 11
+   2.1 Wisata Pemandian Air Panas Padusan....................................................................... 11
+   2.2 Tinjauan Karakteristik dan Batasan Logis Layanan .................................................. 12
+   2.3 Data Mining dan Knowledge Discovery in Database (KDD) ................................... 13
+   2.4 Aspek Psikologis dalam Transaksi Wisata................................................................. 15
+   2.5 Strategi Product Bundling (Paket Layanan) .............................................................. 17
+   2.6 Segmentasi Pelanggan dalam Industri Pariwisata ..................................................... 18
+   2.7 Analisis Clustering..................................................................................................... 19
+   2.8 Algoritma Agglomerative Hierarchical Clustering .................................................... 20
+   2.9 Teknik Pra-pemrosesan Data (Data Preprocessing).................................................. 21
+   2.10. Pengukuran Jarak (Distance Measure) dan Metode Penggabungan (Linkage)...... 22
+   2.11. Evaluasi Cluster (Silhouette Coefficient) ............................................................... 24
+   2.12 Pengujian Sistem ..................................................................................................... 25
+   2.13 Penelitian Terdahulu ................................................................................................ 27
+BAB III METODE PENELITIAN ...................................................................................... 33
+   3.1 Tempat dan Waktu Penelitian .................................................................................... 33
+   3.2 Alat dan Materi Penelitian ......................................................................................... 33
+   3.3 Metode Penelitian ...................................................................................................... 35
+   3.4 Rancangan Sistem...................................................................................................... 50
+   3.5 Evaluasi Sistem.......................................................................................................... 62
+   3.6 Jadwal Penelitian ....................................................................................................... 63
+DAFTAR PUSTAKA .......................................................................................................... 65
+
+                                                      iii
+                                         DAFTAR GAMBAR
+Gambar 3.1. Alur kerja metode penelitian ......................................................................... 36
+Gambar 3.2. Diagram use case sistem. .............................................................................. 51
+Gambar 3.3. Arsitektur sistem............................................................................................ 53
+Gambar 3.4. Alur logika sistem. ........................................................................................ 55
+Gambar 3.5. Conceptual Data Model (CDM). ................................................................... 57
+Gambar 3.6. Physical Data Model (PDM) ......................................................................... 58
+Gambar 3.7. Rancangan antarmuka (dashboard) sistem. ................................................... 60
+
+                                                      iv
+                                           DAFTAR TABEL
+Tabel 2.1. Estimasi alokasi waktu layanan ......................................................................... 12
+Tabel 2.2. Jenis segmentasi industri wisata......................................................................... 18
+Tabel 2.3. Interpretasi skor SUS ......................................................................................... 27
+Tabel 2.4 Penelitian terdahulu............................................................................................. 27
+Tabel 3.1. Spesifikasi hardware .......................................................................................... 34
+Tabel 3.2. Spesifikasi software............................................................................................ 34
+Tabel 3.3. Rincian atribut dataset........................................................................................ 35
+Tabel 3.4. Contoh data mentah............................................................................................ 37
+Tabel 3.5. Aturan logika pembersihan data transaksi.......................................................... 38
+Tabel 3.6. Contoh skema generalisasi dan pemetaan kategori produk ............................... 40
+Tabel 3.7. Simulasi tabel profil klaster ............................................................................... 48
+Tabel 3.8. Contoh rekomendasi paket ................................................................................. 50
+Tabel 3.9. Struktur tabel user. ............................................................................................. 58
+Tabel 3.10. Struktur tabel riwayat_analisis. ........................................................................ 59
+Tabel 3.11. Rencana pengujian black box ........................................................................... 62
+Tabel 3.12. Jadwal pelaksanaan penelitian. ........................................................................ 64
+
+                                                      v
+                                                   BAB I
+                                           PENDAHULUAN
+         Sebagai pendahuluan, bab ini menguraikan urgensi analisis pola pengunjung di
+Pemandian Air Panas Padusan untuk optimalisasi penjualan tiket melalui strategi product
+bundling.
+
+1.1 Latar Belakang
+         PT Palawi Risorsis merupakan perusahaan yang bergerak di bidang pengelolaan
+
+destinasi wisata dengan berbagai unit bisnis yang tersebar di berbagai lokasi strategis. Salah
+satu unit unggulan yang dikelola adalah Pemandian Air Panas Padusan, sebuah destinasi
+wisata yang menawarkan variasi produk layanan yang lengkap, mencakup Tiket Masuk
+Reguler, Karcis Parkir, Tiket Wahana Kolam Air Panas, hingga layanan akomodasi seperti
+Tiket Camping dan Penginapan (Perhutani, 2024; D.D.J. Putro, komunikasi personal, 27
+November 2025). Meskipun demikian, data transaksi terkini (2025) menunjukkan adanya
+dinamika tren kunjungan yang kini didominasi oleh wahana rekreasi air, sementara lini
+produk lain mengalami perubahan pola permintaan. Keberagaman produk layanan ini
+sesungguhnya menunjukkan potensi besar bagi perusahaan untuk melayani berbagai segmen
+pengunjung dengan preferensi yang berbeda-beda.
+
+         Namun, berdasarkan observasi lapangan dan wawancara mendalam dengan pihak
+manajemen, realitas operasional saat ini menunjukkan bahwa sistem transaksi yang
+diterapkan masih bersifat parsial atau individual. Dalam rekapitulasi data, setiap layanan
+tercatat sebagai item transaksi yang berdiri sendiri (standalone item) tanpa adanya skema
+pengikat di awal, sehingga pengunjung cenderung membeli tiket secara eceran/satuan.
+Kondisi ini menciptakan hambatan psikologis bagi pengunjung, di mana setiap keputusan
+pembelian individual menimbulkan beban mental yang dapat mengurangi kenyamanan
+pengalaman wisata. Dalam perspektif mental accounting, Wen et al. (2021) menjelaskan
+bahwa pembayaran terpisah untuk setiap komponen paket wisata mengharuskan pengunjung
+membuat banyak keputusan keuangan individual, yang dapat meningkatkan disutility
+psikologis dari pengalaman konsumsi.
+
+         Hambatan psikologis inilah yang menyebabkan pola perilaku pengunjung cenderung
+terfragmentasi. Pengunjung umumnya datang dengan satu tujuan spesifik saja, misalnya
+hanya mengunjungi wahana kolam renang atau hanya menggunakan fasilitas penginapan,
+tanpa memanfaatkan wahana lainnya. Padahal, secara kuantitatif, Wisata Padusan memiliki
+basis pasar yang sangat masif. Berdasarkan data historis perusahaan, destinasi ini
+
+                                                      6
+                                                                                                             7
+
+mencatatkan rata-rata kunjungan mencapai lebih dari 7.200 wisatawan per minggunya,
+dengan total akumulasi mencapai 384.214 pengunjung sepanjang tahun 2024. Bahkan, pada
+periode high season, lalu lintas kunjungan ini dapat melonjak hingga 15.500 wisatawan
+dalam satu minggu. Tingginya angka kunjungan yang merupakan bukti nyata popularitas
+Padusan ini, sayangnya justru menciptakan fenomena lost opportunity (hilangnya potensi
+pendapatan) bagi perusahaan. Rata-rata pengeluaran per pengunjung (spending per pax)
+menjadi rendah akibat ketiadaan penawaran silang (cross-selling) yang menarik sejak awal.
+Akibatnya, wahana yang telah dibangun dengan investasi besar berisiko tidak dimanfaatkan
+secara maksimal (D.D.J. Putro, komunikasi personal, 27 November 2025).
+
+         Guna memitigasi hambatan transaksional serta mengonversi lost opportunity
+tersebut, strategi product bundling (paket layanan) hadir sebagai solusi konkret untuk
+menyederhanakan proses transaksi sekaligus mengoptimalisasi pendapatan. Bai et al. (2022)
+menemukan bahwa transparansi harga dalam paket wisata yang ter-bundle dapat
+meningkatkan persepsi keadilan (perceived fairness) dan mendorong purchase intention
+pengunjung. Wei et al. (2025) juga menemukan bahwa strategi bundling terbukti efektif
+mempengaruhi persepsi nilai pelanggan, terutama ketika paket tersebut memiliki variasi
+produk yang heterogen. Lebih lanjut, Liu J. et al. (2025) menyoroti bahwa strategi bundling
+yang dirancang dengan tepat dapat meningkatkan emosi positif wisatawan, khususnya pada
+segmen keluarga, melalui pendekatan regulasi emosi yang memberikan kemudahan
+pengalaman wisata.
+
+         Meskipun demikian, perancangan strategi bundling tidak dapat dilakukan hanya
+berdasarkan intuisi atau asumsi semata. Diperlukan pendekatan analisis data yang cerdas
+untuk menghasilkan rekomendasi paket yang tepat sasaran. Sebagaimana ditegaskan oleh
+Wang (2023), penerapan model rekomendasi cerdas yang berbasis pada pola kunjungan
+historis dan penyaringan kolaboratif memegang peran krusial dalam menyajikan layanan
+yang sesuai dengan karakteristik musim (seasonality) dan relevan bagi wisatawan. Oleh
+karena itu, pendekatan Data Mining diperlukan untuk mengubah data transaksi historis
+menjadi rekomendasi strategis yang objektif. Sebagaimana dijelaskan oleh Antonio et al.
+(2019), penggunaan teknik data mining dan machine learning dalam manajemen pendapatan
+hotel memungkinkan identifikasi pola permintaan berbasis waktu dan perilaku pemesanan,
+yang pada akhirnya mendukung pengambilan keputusan yang lebih akurat terkait strategi
+penetapan harga dan alokasi inventori untuk memaksimalkan pendapatan.
+
+         Untuk mendukung pendekatan berbasis data tersebut, PT Palawi Risorsis
+sesungguhnya memiliki aset data transaksi harian yang sangat lengkap dalam kurun waktu
+                                                                                                             8
+
+tiga tahun terakhir (2022­2025). Sayangnya, ribuan baris data transaksi harian tersebut
+selama ini hanya dimanfaatkan untuk laporan rekapitulasi pendapatan bulanan (revenue
+report), tanpa diolah lebih lanjut untuk menggali pengetahuan tersembunyi (knowledge
+discovery). Berdasarkan wawancara, kondisi ini menyebabkan rencana penerapan strategi
+bundling yang sebenarnya telah dicanangkan oleh manajemen, menjadi terkendala
+realisasinya akibat ketiadaan landasan analisis data yang kuat. Fenomena ini sejalan dengan
+temuan Xu R. (2023), yang menekankan bahwa meskipun destinasi wisata memiliki data
+besar, sumber pengetahuan tersebut sering kali tidak dimanfaatkan optimal untuk
+pengambilan keputusan. Akibatnya, perusahaan terus kehilangan peluang strategis untuk
+memaksimalkan pendapatan melalui penjualan silang.
+
+         Dalam perancangan paket wisata berbasis data mining, penerapan clustering telah
+terbukti efektif mengekstraksi preferensi wisatawan sebagai basis personalisasi rekomendasi
+(Abbasi-Moud et al., 2021; Solano-Barliza et al., 2024). Mengadopsi pendekatan tersebut,
+penelitian ini menggunakan algoritma Agglomerative Hierarchical Clustering (AHC) untuk
+mengidentifikasi pola karakteristik hari operasional guna memetakan segmentasi musim
+serta tren permintaan produk yang simultan. Penggunaan AHC dipilih karena
+keunggulannya dalam membentuk struktur hierarki (dendrogram) yang mampu
+memvisualisasikan hubungan kemiripan antar-layanan secara mendetail tanpa
+mengharuskan penentuan jumlah klaster di awal secara paksa (Rodríguez et al., 2018).
+Efektivitas ini didukung oleh Guerard et al. (2025) yang membuktikan bahwa algoritma
+hierarki (AGNES) lebih unggul dalam memvalidasi segmen pariwisata dibandingkan K-
+Means, sekaligus memungkinkan analisis struktur dendrogram untuk pengujian konsistensi
+hyperparameter. Terlebih lagi, tinjauan literatur oleh D'Urso et al. (2021) mengonfirmasi
+bahwa algoritma hierarki, khususnya metode Ward, tetap menjadi metode yang paling
+populer dan aplikatif dalam segmentasi pasar pariwisata.
+
+         Berdasarkan uraian permasalahan dan solusi di atas, penelitian ini bertujuan
+menghasilkan segmentasi pola kunjungan yang akurat berbasis data historis transaksi.
+Diharapkan, solusi berbasis data-driven decision making ini dapat membantu manajemen
+PT Palawi Risorsis dalam meningkatkan efisiensi operasional, mengoptimalisasi pendapatan
+melalui strategi bundling yang tepat sasaran sesuai dengan musim kunjungan, serta
+menciptakan pengalaman pengunjung yang lebih memuaskan di unit Pemandian Air Panas
+Padusan.
+                                                                                                             9
+
+1.2 Rumusan Masalah
+    Berdasarkan latar belakang yang telah diuraikan, maka perumusan masalah dalam
+
+penelitian ini adalah sebagai berikut:
+    1. Bagaimana merancang dan membangun sistem data mining untuk menghasilkan
+         strategi bundling tiket wisata di Pemandian Air Panas Padusan menggunakan metode
+         Agglomerative Hierarchical Clustering?
+    2. Bagaimana mengevaluasi hasil rancangan strategi paket bundling yang dihasilkan
+         untuk PT Palawi Risorsis?
+
+1.3 Tujuan Penelitian
+    Berdasarkan rumusan masalah di atas, tujuan yang ingin dicapai dalam penelitian ini
+
+adalah:
+    1. Merancang dan membangun sistem data mining untuk menghasilkan strategi
+         bundling tiket wisata di Pemandian Air Panas Padusan menggunakan metode
+         Agglomerative Hierarchical Clustering.
+    2. Mengevaluasi hasil rancangan strategi paket bundling yang dihasilkan untuk PT
+         Palawi Risorsis.
+
+1.4 Manfaat Penelitian
+    Penelitian ini diharapkan dapat memberikan kontribusi manfaat bagi berbagai pihak, di
+
+antaranya:
+    1. Memberikan landasan objektif bagi manajemen PT Palawi Risorsis dalam
+         merancang strategi paket bundling tiket wisata yang efektif untuk meningkatkan
+         pendapatan perusahaan dan menciptakan pengalaman pengunjung yang lebih
+         terintegrasi.
+    2. Memberikan wawasan mendalam (insight) mengenai pola kunjungan Pemandian Air
+         Panas Padusan berdasarkan data aktual (data-driven), sehingga manajemen dapat
+         memahami tren permintaan pasar dengan lebih akurat.
+    3. Membantu manajemen dalam perencanaan operasional yang lebih efisien
+         berdasarkan prediksi keramaian dan tren preferensi layanan yang ditemukan pada
+         setiap cluster, sehingga sumber daya perusahaan dapat dialokasikan secara optimal.
+    4. Memperkaya wawasan keilmuan mengenai penerapan teknik Data Mining
+         menggunakan algoritma Agglomerative Hierarchical Clustering, khususnya dalam
+         studi kasus segmentasi pasar di industri pariwisata.
+                                                                                                           10
+
+    5. Menjadi referensi literatur bagi peneliti selanjutnya yang hendak mengembangkan
+         penelitian terkait perancangan strategi bisnis dan analisis pola kunjungan wisata
+         berbasis data transaksi.
+
+1.5 Batasan Masalah
+    Beberapa batasan masalah yang perlu diperjelas untuk menjaga fokus dan ruang lingkup
+
+penelitian:
+    1. Penelitian hanya dilakukan pada unit bisnis Pemandian Air Panas Padusan di bawah
+         pengelolaan PT Palawi Risorsis, tidak mencakup unit bisnis lain.
+    2. Data yang digunakan adalah data sekunder berupa laporan rekapitulasi transaksi
+         harian dari bulan Januari 2022 hingga bulan November 2025 yang diperoleh dari
+         sistem internal perusahaan.
+    3. Algoritma yang digunakan untuk segmentasi adalah Agglomerative Hierarchical
+         Clustering. Penelitian ini tidak membandingkan kinerja dengan algoritma clustering
+         lain.
+    4. Proses pengelompokan (clustering) hanya menggunakan variabel volume penjualan
+         fisik (quantity) per kategori tiket (Tiket Masuk, Kendaraan, Wahana, dan
+         Penginapan) sebagai atribut input.
+    5. Luaran sistem berupa visualisasi struktur hierarki (dendrogram), profil karakteristik
+         per cluster, dan rancangan strategi bundling. Sistem tidak mencakup fitur
+         implementasi penjualan tiket secara langsung (e-ticketing), sistem pembayaran
+         (payment gateway), atau peramalan pendapatan (forecasting) di masa depan.
+    6. Implementasi sistem dibangun menggunakan bahasa pemrograman Python, dengan
+         pemanfaatan pustaka (library) pengolahan data seperti Pandas dan Scikit-learn, serta
+         visualisasi data.
+    7. Evaluasi penelitian meliputi evaluasi validitas model menggunakan metode
+         Silhouette Coefficient, evaluasi fungsionalitas sistem menggunakan Blackbox
+         Testing, serta uji penerimaan pengguna (User Acceptance Testing) yang diukur
+         menggunakan metode System Usability Scale (SUS) kepada pengguna terkait di PT
+         Palawi Risorsis.
+                                                  BAB II
+                                        TINJAUAN PUSTAKA
+         Bab ini menguraikan landasan teori mengenai integrasi algoritma Agglomerative
+Hierarchical Clustering (AHC) dengan strategi Product Bundling. Pembahasan mencakup
+tahapan teknis analisis data, mulai dari pra-pemrosesan, pengukuran kemiripan, hingga
+validasi klaster, yang menjadi acuan ilmiah dalam merancang sistem strategi paket wisata
+berbasis data di Pemandian Air Panas Padusan.
+
+2.1 Wisata Pemandian Air Panas Padusan
+         Wisata Pemandian Air Panas Padusan merupakan salah satu destinasi unggulan di
+
+Kabupaten Mojokerto yang terletak di kawasan lereng Gunung Welirang, Kecamatan Pacet.
+Secara geografis, kawasan ini menawarkan daya tarik utama berupa sumber air panas alami
+yang mengandung belerang, yang dipadukan dengan panorama hutan pinus yang asri. Latul
+(2014) dalam penelitiannya mendeskripsikan bahwa potensi alam di Padusan, mulai dari
+kolam air panas hingga pemandangan alamnya, merupakan aset vital yang perlu dikelola
+melalui strategi branding yang kuat untuk meningkatkan kesadaran pengunjung akan
+keberadaan destinasi ini.
+
+         Dalam operasionalnya yang dikelola oleh PT Palawi Risorsis, Wisata Padusan tidak
+hanya mengandalkan satu jenis pemandian, melainkan telah berkembang menjadi kawasan
+wisata terpadu dengan berbagai unit wahana dan mitra usaha. Berdasarkan data inventaris
+perusahaan, portofolio layanan di Wisata Padusan mencakup:
+
+    1. Layanan Gerbang Masuk: Mencakup Karcis Tanda Masuk (KTM) Reguler dan
+         Retribusi Parkir (Kendaraan R2, R4, dan R6).
+
+    2. Wahana Rekreasi dan Terapi Air: Meliputi Kolam Renang Reguler (Anak dan
+         Dewasa), Kolam Gambiran, Whirlpool (kolam pusaran air panas untuk terapi), serta
+         Wahana D'Qoem-Qoem (pemandian air panas premium/privat).
+
+    3. Fasilitas Akomodasi Mitra (Revenue Sharing): Mencakup area perkemahan
+         (camping ground) dan penginapan kekinian (glamping/resort) hasil kerja sama
+         dengan mitra seperti Bobocabin, Soemo Hills, dan Jungle Hospitality/Onsen.
+         Signifikansi Padusan sebagai objek penelitian akademis telah banyak dibahas dalam
+
+berbagai studi terdahulu, terutama dari aspek ekonomi. Al Hazmi dan Setiawan (2024) dalam
+penelitian mereka mengenai valuasi ekonomi kawasan wisata, mengungkapkan bahwa
+Padusan memiliki nilai ekonomi yang signifikan. Melalui pendekatan Travel Cost Method,
+penelitian tersebut menemukan bahwa pengunjung memiliki kemauan membayar
+
+                                                      11
+                                                                                                           12
+
+(willingness to pay) yang tinggi untuk menikmati fasilitas di Padusan, yang mengindikasikan
+bahwa lokasi ini bukan sekadar tempat rekreasi lokal, melainkan aset ekonomi yang
+memerlukan manajemen pendapatan yang serius.
+
+         Sementara itu, dalam konteks pengembangan strategis, Afgani (2019) menyoroti
+pentingnya perumusan strategi pengembangan untuk mempertahankan daya saing Padusan
+di tengah pertumbuhan wisata buatan di sekitarnya. Penelitian tersebut menekankan
+perlunya inovasi dalam pengelolaan produk wisata agar siklus hidup destinasi tidak
+mengalami penurunan (decline). Temuan ini sejalan dengan upaya PT Palawi Risorsis saat
+ini yang berupaya melakukan optimalisasi layanan melalui strategi bundling.
+
+         Meskipun berbagai penelitian di atas telah membahas aspek branding, valuasi
+ekonomi, dan strategi pengembangan secara makro, belum ada penelitian spesifik yang
+memanfaatkan data transaksi digital harian untuk merancang strategi product bundling
+berbasis teknologi. Penelitian ini hadir untuk mengisi celah tersebut dengan menawarkan
+pendekatan Data Mining guna mengoptimalkan potensi ekonomi yang telah teridentifikasi
+oleh peneliti-peneliti sebelumnya.
+
+2.2 Tinjauan Karakteristik dan Batasan Logis Layanan
+         Dalam merancang sistem rekomendasi paket wisata (bundling), diperlukan
+
+pemahaman terhadap karakteristik setiap layanan untuk memastikan paket yang dihasilkan
+masuk akal secara logis dan fisik. Mengingat setiap pengunjung memiliki keterbatasan
+waktu dan energi dalam satu hari kunjungan, sistem perlu menerapkan batasan (constraints)
+agar tidak merekomendasikan gabungan wahana yang berlebihan.
+
+         Berdasarkan pengamatan terhadap jenis layanan yang tersedia pada data transaksi,
+karakteristik layanan di Pemandian Air Panas Padusan dapat dikategorikan sebagai berikut:
+
+Tabel 2.1. Estimasi alokasi waktu layanan
+
+    Kategori       Jenis Wahana                Karakteristik & Estimasi Waktu
+    Layanan     (Berdasarkan Data          - (Prasyarat Wajib Masuk)
+
+Akses Utama          Transaksi)
+              · KTM Reguler
+              (Anak/Dewasa)
+
+              · Karcis Parkir
+              (R2/R4/R6)
+                                                                     13
+
+Wisata Air    · Whirlpool Dewasa & Singkat (< 1 Jam). Aktivitas berendam air
+(Relaksasi &
+Premium)      Anak               panas suhu tinggi umumnya memiliki
+
+Wisata Air                       batasan durasi fisik demi alasan kesehatan.
+(Rekreasi)
+              · Wahana D'Qoem-   Sedang (1 - 2 Jam). Aktivitas berenang
+Akomodasi &   Qoem               dan bermain air yang membutuhkan waktu
+Inap          · Kolam Renang     bilas dan ganti pakaian.
+              Dewasa & Anak
+
+              · Kolam Gambiran   Panjang (> 12 Jam). Membutuhkan waktu
+              · Camping Ground   inap, tidak relevan untuk paket kunjungan
+                                 singkat satu hari (one-day trip).
+              · Penginapan
+              (Bobocabin, Soemo
+              Hills)
+
+         Implikasi Batasan Sistem (System Constraints) Dengan asumsi rata-rata waktu
+efektif kunjungan wisata adalah 4­6 jam per hari, maka secara logis seorang pengunjung
+tidak dimungkinkan untuk menikmati seluruh varian kolam dalam satu waktu.
+Menggabungkan aktivitas Whirlpool (suhu tinggi) dengan Kolam Renang (fisik) secara
+berlebihan dapat mengurangi kenyamanan. Oleh karena itu, penelitian ini menetapkan
+batasan logis bahwa rekomendasi paket bundling difokuskan pada kombinasi Satu Tiket
+Masuk + Satu Layanan Penunjang Utama yang paling sesuai dengan pola musim
+(seasonality), guna menghindari rekomendasi paket yang tidak realistis secara waktu.
+
+2.3 Data Mining dan Knowledge Discovery in Database (KDD)
+         Data mining adalah proses ekstraksi pola atau informasi yang berguna dari kumpulan
+
+data yang besar. Han et al. (2022) dalam edisi terbaru buku Data Mining: Concepts and
+Techniques mendefinisikan data mining sebagai proses penemuan pola yang menarik dan
+pengetahuan dari sejumlah besar data. Sumber data tersebut dapat mencakup basis data
+transaksional, data warehouses, web, atau repositori informasi lainnya.
+
+         Dalam konteks yang lebih luas, data mining merupakan tahapan inti dari proses
+Knowledge Discovery in Databases (KDD). Antonio et al. (2022) menegaskan bahwa data
+mining mengintegrasikan metode machine learning, statistik, dan visualisasi data untuk
+menemukan struktur tersembunyi dalam data serta mengekstrak pengetahuan yang dapat
+ditindaklanjuti.
+                                                                                                           14
+
+         Relevansi teknologi ini dalam industri pariwisata dijelaskan oleh Núñez et al. (2024),
+yang menyatakan bahwa teknik machine learning dan data mining telah muncul sebagai
+teknologi disruptif. Teknologi ini memungkinkan ekstraksi wawasan dari data historis
+pengunjung untuk tujuan prediktif dan analitis, yang krusial bagi pengambilan keputusan
+strategis.
+
+         Proses KDD terdiri atas serangkaian tahapan iteratif untuk mengubah data mentah
+menjadi pengetahuan yang bermanfaat (Han et al., 2022; Tan et al., 2019). Tahapan tersebut
+dijelaskan sebagai berikut:
+
+    a. Selection (Pemilihan Data)
+         Merupakan tahap awal di mana data yang relevan dengan tujuan analisis
+         diidentifikasi dan dipisahkan dari basis data operasional. Fokus pada tahap ini adalah
+         menyeleksi atribut yang signifikan terhadap pola pembelian pengunjung.
+
+    b. Preprocessing (Pra-pemrosesan)
+         Tahap ini bertujuan untuk menjamin kualitas data sebelum diproses. Aktivitas
+         utamanya meliputi pembersihan data (data cleaning) untuk menangani noise, data
+         yang tidak konsisten, atau nilai yang hilang (missing values) yang sering ditemukan
+         dalam data transaksi penjualan tiket.
+
+    c. Transformation (Transformasi)
+         Data diubah ke dalam format yang sesuai untuk algoritma mining. Dalam konteks
+         analisis klaster, tahap ini sangat krusial, khususnya proses normalisasi untuk
+         menyamakan skala antar-atribut agar perhitungan jarak (seperti Euclidean Distance)
+         menjadi akurat.
+
+    d. Data Mining
+         Ini adalah tahap inti di mana algoritma cerdas diterapkan untuk mengekstrak pola.
+         Berdasarkan tujuan penelitian, tugas data mining dapat berupa deskripsi (seperti
+         clustering dan asosiasi) atau prediksi (seperti klasifikasi dan regresi). Penelitian ini
+         berfokus pada teknik clustering untuk mengelompokkan karakteristik pengunjung.
+
+    e. Interpretation and Evaluation (Interpretasi dan Evaluasi)
+         Pola yang ditemukan dievaluasi berdasarkan validitas dan kebaruannya. Pada tahap
+         ini, visualisasi data (seperti dendrogram) digunakan untuk menerjemahkan pola
+         matematis menjadi wawasan bisnis yang dapat dipahami, sehingga manajemen dapat
+         merumuskan strategi yang tepat berdasarkan pengetahuan tersebut.
+                                                                                                           15
+
+2.4 Aspek Psikologis dalam Transaksi Wisata
+         Pemahaman mendalam terhadap aspek psikologis pengunjung dalam proses
+
+transaksi merupakan fondasi krusial untuk merancang strategi product bundling yang efektif.
+Penelitian dalam bidang ekonomi perilaku (behavioral economics) telah mengungkapkan
+bahwa keputusan pembelian wisatawan tidak hanya dipengaruhi oleh faktor ekonomi
+rasional, tetapi juga oleh beban psikologis yang muncul dari struktur transaksi itu sendiri.
+Dua teori utama yang relevan dalam konteks ini adalah Transaction Cost Theory dan Mental
+Accounting Theory, yang secara kolektif menjelaskan mengapa sistem pembayaran parsial
+menciptakan hambatan psikologis yang signifikan bagi pengunjung.
+
+2.4.1 Transaction Cost Theory dalam Konteks Pariwisata
+         Transaction Cost Theory (TCT) yang dikembangkan oleh Williamson (dalam Saleh,
+
+2024) menegaskan bahwa biaya transaksi tidak hanya mencakup biaya moneter, tetapi juga
+biaya waktu, usaha kognitif, dan ketidaknyamanan psikologis. Saleh (2024) dalam
+penelitiannya tentang pemasaran pariwisata mengaplikasikan TCT untuk mengidentifikasi
+bahwa wisatawan secara inheren berusaha meminimalkan biaya pencarian informasi
+(information search costs) dan biaya koordinasi (coordination costs) untuk mengurangi
+beban kognitif selama perjalanan.
+
+         Saleh (2024) menjelaskan bahwa biaya transaksi dalam pariwisata mencakup tiga
+dimensi: search costs (waktu mencari informasi layanan), negotiation costs (proses tawar-
+menawar dan klarifikasi), dan monitoring costs (memastikan layanan sesuai yang
+dijanjikan). Dalam konteks Pemandian Air Panas Padusan, sistem transaksi parsial di mana
+pengunjung harus membeli tiket terpisah untuk setiap layanan secara kumulatif
+meningkatkan ketiga dimensi biaya ini, mengakibatkan psychic cost (beban psikologis) yang
+signifikan.
+
+         Strategi product bundling mengatasi hambatan ini dengan menawarkan single
+payment access, sehingga mengeliminasi biaya negosiasi berulang. Saleh (2024)
+menegaskan bahwa bundling dapat meminimalkan information search costs dengan
+menyederhanakan struktur keputusan dari "n keputusan terpisah" menjadi "satu keputusan
+tunggal," yang secara langsung meningkatkan pengalaman wisata yang mulus (seamless
+experience).
+                                                                                                           16
+
+2.4.2 Mental Accounting Theory dan Pain of Paying
+         Mental Accounting Theory yang dikembangkan oleh Thaler (dalam Cozzio et al.,
+
+2021) menjelaskan bagaimana individu mengkategorikan dan mengevaluasi pengeluaran
+dalam "akun mental" terpisah (mental accounts). Cozzio et al. (2021) menerapkan teori ini
+untuk menjelaskan fenomena aggregate disutility ketidaknyamanan kumulatif ketika
+wisatawan melakukan pembayaran berulang untuk layanan terpisah.
+
+         Cozzio et al. (2021) menemukan bahwa setiap transaksi pembayaran memicu "pain
+of paying" rasa sakit emosional saat mengeluarkan uang. Pembayaran terpisah meningkatkan
+aggregate disutility karena pengunjung mengalami pain of paying secara berulang untuk
+setiap komponen layanan. Sebaliknya, ketika layanan dikemas dalam satu paket bundling
+yang dibayar di muka (prepaid bundle), pengunjung mempersepsikan pembayaran sebagai
+sunk cost yang telah "dilunasi," sehingga konsumsi di destinasi terasa "gratis" secara
+psikologis. Fenomena ini disebut transaction decoupling pemisahan psikologis antara
+pembayaran dan konsumsi.
+
+         Dalam penelitian quasi-experiment di resor Italia, Cozzio et al. (2021) membuktikan
+bahwa wisatawan yang membeli paket all-inclusive tidak mengurangi pengeluaran ekstra
+untuk item di luar paket, karena mereka menetapkan mental budget yang tetap untuk
+pengeluaran tambahan. Temuan ini mengindikasikan bahwa bundling tidak hanya
+meningkatkan kenyamanan, tetapi juga membuka peluang untuk penjualan silang (cross-
+selling) produk tambahan.
+
+2.4.3 Implikasi Teoritis untuk Strategi Product Bundling
+         Integrasi Transaction Cost Theory dan Mental Accounting Theory memberikan
+
+landasan teoretis mengapa strategi bundling efektif. Dari perspektif TCT, bundling
+mengurangi total transaction costs dengan menyederhanakan struktur keputusan. Dari
+perspektif mental accounting, bundling mengurangi aggregate pain of paying melalui
+transaction decoupling, di mana pembayaran tunggal di muka menciptakan ilusi konsumsi
+"gratis" pada saat penggunaan aktual.
+
+         Kedua teori ini menjelaskan fenomena lost opportunity yang menjadi latar belakang
+penelitian ini. Ketika pengunjung menghadapi transaction costs tinggi dan pain of paying
+berulang, mereka cenderung membatasi konsumsi hanya pada layanan esensial, sehingga
+wahana tambahan menjadi tidak dimanfaatkan.
+
+         Oleh karena itu, penelitian ini menggunakan algoritma Agglomerative Hierarchical
+Clustering (AHC) untuk mengidentifikasi pola produk, dan menggunakan teori psikologis
+                                                                                                           17
+
+ini sebagai landasan penyusunan strategi. Dengan menerapkan bundling yang berbasis data
+dan pemahaman psikologis, perusahaan dapat merancang paket yang meningkatkan
+kenyamanan pengunjung sekaligus mengoptimalkan pendapatan per pelanggan (revenue per
+customer) melalui peningkatan tingkat penggunaan fasilitas (facility utilization rate).
+
+2.5 Strategi Product Bundling (Paket Layanan)
+         Product bundling adalah strategi pemasaran di mana dua atau lebih produk atau
+
+layanan dijual bersama dalam satu paket dengan harga khusus. Nicolau dan Sellers (2020)
+menegaskan bahwa strategi bundling terbukti efektif memengaruhi persepsi nilai pelanggan
+dan mengurangi sensitivitas mereka terhadap harga. Dalam industri pariwisata dan
+perhotelan (hospitality), strategi bundling terbukti efektif dalam meningkatkan nilai
+pemesanan dan kepuasan pelanggan.
+
+         Mai et al. (2025) meneliti efek tiga strategi bundling hotel (yaitu harga, produk, dan
+layanan) pada emosi pelanggan dan perilaku selanjutnya dari perspektif wisatawan keluarga.
+Hasil penelitian menunjukkan bahwa ketiga strategi bundling yang berbeda tersebut secara
+signifikan dan positif memengaruhi regulasi emosi positif wisatawan keluarga.
+
+    Menurut Huang dan Ho (2022), terdapat tiga bentuk utama strategi bundling:
+    a. Pure bundling (bundling murni)
+
+         Perusahaan hanya menjual produk dalam bentuk paket dan tidak menawarkan produk
+         secara terpisah. Strategi ini memaksa konsumen untuk membeli paket lengkap.
+    b. Mixed bundling (bundling campuran)
+         Perusahaan menawarkan baik paket bundel maupun semua produk terpisah yang ada
+         dalam bundel tersebut. Konsumen memiliki pilihan untuk membeli produk secara
+         terpisah dengan harga penuh atau dalam bundel dengan harga diskon. Ini adalah
+         strategi yang paling fleksibel dan umum digunakan dalam industri pariwisata.
+    c. Unbundling
+         Perusahaan hanya menjual produk secara terpisah tanpa opsi paket. Ini adalah
+         strategi dasar yang biasanya digunakan sebagai pembanding saat
+         mempertimbangkan strategi bundling.
+         Zeithaml et al. (2018) dalam Services Marketing menjelaskan bahwa strategi
+bundling dapat meningkatkan perceived value (nilai yang dirasakan) konsumen dan
+mendorong pembelian impulsif. Xu et al. (2016) dalam penelitiannya tentang event bundling
+menemukan bahwa strategi bundling acara dapat meningkatkan nilai yang dirasakan dari
+acara serta meningkatkan loyalitas pengunjung terhadap destinasi.
+                                                                                                           18
+
+         Dalam penelitian ini, strategi Mixed Bundling akan menjadi fokus rekomendasi
+karena memberikan fleksibilitas kepada pengunjung untuk memilih antara membeli tiket
+secara terpisah atau dalam paket bundel, sesuai dengan preferensi dan kebutuhan mereka.
+
+2.6 Segmentasi Pelanggan dalam Industri Pariwisata
+         Segmentasi pasar merupakan strategi yang esensial dalam industri pariwisata untuk
+
+memahami heterogenitas konsumen. Kotler et al. (2021) dalam Marketing Management
+edisi ke-16 menjelaskan bahwa segmentasi pasar adalah proses membagi pasar menjadi
+kelompok-kelompok pembeli yang berbeda yang mungkin memerlukan produk atau bauran
+pemasaran yang terpisah. Dolnicar (2020) lebih lanjut menyatakan bahwa segmentasi pasar
+dalam pariwisata adalah alat strategis untuk mengatasi heterogenitas di antara wisatawan
+dengan mengelompokkan mereka ke dalam segmen pasar yang mencakup anggota yang
+mirip satu sama lain dan berbeda dari anggota segmen lain.
+
+         Terdapat empat jenis utama segmentasi dalam industri pariwisata yang dijelaskan
+pada tabel 2.2 (Kotler et al., 2021):
+Tabel 2.2. Jenis segmentasi industri wisata
+
+   Jenis Segmentasi                          Definisi dan Karakteristik
+Segmentasi Geografis
+Segmentasi Demografis   Membagi pasar berdasarkan lokasi geografis seperti negara,
+Segmentasi Psikografis  wilayah, atau kota asal wisatawan.
+Segmentasi Perilaku     Berdasarkan karakteristik yang dapat diamati seperti usia,
+                        jenis kelamin, tingkat pendapatan, dan tingkat pendidikan.
+                        Fokus pada gaya hidup, nilai-nilai, opini, dan minat
+                        konsumen.
+                        Mengelompokkan pelanggan berdasarkan perilaku dan
+                        tindakan mereka, seperti frekuensi perjalanan, kebiasaan
+                        pengeluaran, dan motivasi perjalanan.
+
+         Penelitian ini secara spesifik mengadopsi pendekatan segmentasi perilaku
+(behavioral segmentation) dengan menjadikan data transaksi penjualan sebagai variabel
+utama. Dalam konteks penelitian ini, perilaku wisatawan tidak diukur melalui survei
+preferensi atau ciri kepribadian (seperti studi Moisa et al., 2025), melainkan diobservasi
+secara langsung melalui jejak digital transaksi mereka khususnya kombinasi tiket yang dibeli
+dan waktu kunjungan.
+
+         Fokus pada perilaku pembelian aktual (actual purchasing behavior) ini dinilai lebih
+objektif dalam mencerminkan permintaan pasar dibandingkan sekadar data profil statis.
+                                                                                                           19
+
+Dengan mengelompokkan hari kunjungan berdasarkan pola perilaku transaksi yang serupa,
+manajemen dapat merancang strategi product bundling yang secara presisi menargetkan
+kebiasaan belanja segmen tersebut, seperti membedakan paket untuk segmen "keluarga di
+akhir pekan" dengan segmen "pelajar di hari kerja".
+
+2.7 Analisis Clustering
+         Clustering merupakan metode analisis data yang termasuk dalam kategori
+
+unsupervised learning, di mana tujuannya adalah mengelompokkan data berdasarkan
+kemiripan karakteristik tanpa menggunakan label kelas yang sudah ditentukan sebelumnya.
+Tan et al. (2019) dalam buku Introduction to Data Mining menjelaskan bahwa cluster
+analysis membagi data ke dalam kelompok-kelompok (clusters) yang bermakna, berguna,
+atau keduanya. Objek-objek dalam kelompok yang sama memiliki karakteristik yang lebih
+mirip satu sama lain dibandingkan dengan objek di kelompok lain.
+
+         Guerard et al. (2025) menekankan bahwa metode clustering dalam konteks
+pariwisata memungkinkan deteksi pola perilaku wisata yang bermakna dari data, dengan
+memberikan wawasan mendalam mengenai perilaku mobilitas setiap segmen. Rodríguez et
+al. (2018) menerapkan pendekatan hierarchical clustering yang berhasil mengelompokkan
+populasi wisatawan menjadi kelompok-kelompok yang homogen dan bermakna, serta
+memberikan wawasan terperinci tentang karakteristik dan perilaku mobilitas mereka.
+
+    Tujuan utama dari analisis clustering adalah:
+    a. Memaksimalkan homogenitas intra-cluster
+
+         Data dalam satu cluster harus memiliki karakteristik yang sangat mirip satu sama
+         lain.
+    b. Memaksimalkan heterogenitas antar-cluster
+         Cluster yang berbeda harus memiliki karakteristik yang berbeda secara signifikan.
+    c. Menemukan struktur tersembunyi
+         Mengidentifikasi pola atau kelompok alami dalam data yang tidak terlihat secara
+         eksplisit.
+         Dalam konteks penelitian ini, analisis clustering digunakan untuk mengelompokkan
+pola pembelian tiket pengunjung Pemandian Air Panas Padusan berdasarkan kesamaan
+karakteristik transaksi mereka. Hasil pengelompokan ini kemudian akan digunakan sebagai
+dasar untuk merancang strategi paket bundling yang sesuai dengan preferensi setiap segmen
+pengunjung.
+                                                                                                           20
+
+2.8 Algoritma Agglomerative Hierarchical Clustering
+         Agglomerative Hierarchical Clustering adalah salah satu metode clustering hierarkis
+
+yang menggunakan pendekatan bottom-up (dari bawah ke atas). Tan et al. (2019)
+menjelaskan bahwa agglomerative hierarchical clustering dimulai dengan setiap objek
+sebagai cluster terpisah. Kemudian, secara berulang metode ini menggabungkan cluster
+yang paling mirip berdasarkan metrik jarak yang dipilih hingga hanya tersisa satu cluster
+atau sampai kondisi terminasi terpenuhi.
+
+         Proses kerja algoritma Agglomerative Hierarchical Clustering dapat dijelaskan
+sebagai berikut (Han et al., 2022; Tan et al., 2019):
+
+    a. Inisialisasi
+         Setiap observasi atau data point diperlakukan sebagai cluster tersendiri (singleton
+         cluster). Jika ada n data, maka pada awalnya terdapat n cluster.
+
+    b. Perhitungan jarak
+         Menghitung jarak atau kemiripan antara setiap pasang cluster menggunakan metrik
+         jarak tertentu (misalnya, jarak Euclidean).
+
+    c. Penggabungan cluster
+         Dua cluster yang memiliki jarak terdekat (paling mirip) digabungkan menjadi satu
+         cluster baru.
+
+    d. Update matriks jarak
+         Setelah penggabungan, matriks jarak diperbarui untuk mencerminkan jarak antara
+         cluster baru dengan cluster yang tersisa.
+
+    e. Iterasi
+         Langkah 3 dan 4 diulangi secara iteratif hingga semua data bergabung menjadi satu
+         cluster besar atau hingga kriteria berhenti tertentu terpenuhi.
+
+    f. Visualisasi dendrogram
+         Hasil proses hierarkis divisualisasikan dalam bentuk dendrogram (diagram pohon)
+         yang menunjukkan bagaimana cluster-cluster bergabung pada setiap tahap.
+         Salah satu keunggulan utama metode ini adalah kemampuannya untuk
+
+memvisualisasikan struktur hierarki data melalui dendrogram. D'Urso et al. (2021)
+menyatakan bahwa algoritma hierarki, terutama yang menggunakan metode Ward,
+merupakan yang paling populer digunakan dalam penelitian segmentasi pasar pariwisata,
+diikuti oleh kombinasi sekuensial dari algoritma hierarki dan non-hierarki.
+Dendrogram memberikan beberapa keunggulan praktis:
+
+    a. Memudahkan interpretasi struktur cluster secara visual
+                                                                                                           21
+
+    b. Membantu menentukan jumlah cluster optimal dengan memotong dendrogram pada
+         tinggi tertentu
+
+    c. Menunjukkan tingkat kemiripan antar observasi dan antar cluster
+    d. Tidak memerlukan penetapan jumlah cluster (K) di awal, berbeda dengan metode K-
+
+         Means
+Chukhray et al. (2025) dalam penelitiannya tentang clustering konsumen produk pariwisata
+untuk mengembangkan bauran pemasaran yang disesuaikan, menunjukkan bahwa
+pendekatan clustering hierarkis dapat memberikan wawasan yang berharga untuk strategi
+pemasaran yang lebih efektif dalam industri pariwisata.
+
+2.9 Teknik Pra-pemrosesan Data (Data Preprocessing)
+         Kualitas data merupakan faktor penentu utama dalam keberhasilan proses data
+
+mining. Data yang diambil langsung dari sumber operasional (real-world data) sering kali
+tidak lengkap, mengandung noise, dan tidak konsisten. Oleh karena itu, teknik pra-
+pemrosesan data diperlukan untuk mengubah data mentah menjadi format yang berkualitas
+dan layak analisis. Han et al. (2022) menegaskan bahwa terdapat beberapa teknik utama
+dalam pra-pemrosesan data, di mana dua di antaranya yang krusial untuk analisis berbasis
+jarak adalah normalisasi data dan penanganan pencilan (outlier handling).
+
+2.9.1. Normalisasi Data (Data Normalization)
+         Normalisasi adalah proses menskalakan nilai atribut numerik ke dalam rentang
+
+tertentu yang lebih kecil, seperti 0 hingga 1. Teknik ini sangat vital dalam algoritma
+clustering yang menggunakan pengukuran jarak (seperti Euclidean Distance) sebagai dasar
+pengelompokan. Tanpa normalisasi, atribut dengan rentang nilai yang besar (misalnya:
+jumlah tiket terjual dalam ribuan) akan mendominasi perhitungan jarak dibandingkan atribut
+dengan rentang nilai kecil (misalnya: jumlah penginapan dalam satuan), sehingga
+menyebabkan hasil klaster menjadi bias.
+
+         Metode yang diterapkan dalam penelitian ini adalah Min-Max Scaler. Metode ini
+mempertahankan hubungan perbandingan antar-data asli. Jika  adalah nilai asli data,
+ dalah nilai minimum, dan  adalah nilai maksimum pada atribut tersebut, maka
+nilai ternormalisasi dihitung menggunakan persamaan berikut (Han et al., 2022):
+
+  =     -   (2.1)
+      - 
+                  22
+
+         Hasil dari persamaan di atas memastikan bahwa seluruh atribut data memiliki bobot
+yang setara (ekuivalen) dalam ruang vektor multidimensi.
+
+2.9.2. Deteksi Pencilan (Outlier Detection)
+         Pencilan (outlier) adalah objek data yang menyimpang secara signifikan dari objek
+
+data lainnya, sehingga menimbulkan kecurigaan bahwa data tersebut dihasilkan oleh
+mekanisme yang berbeda (Han et al., 2022). Dalam data transaksi penjualan, pencilan
+dapat merepresentasikan dua hal: kesalahan input (noise) yang harus dihapus, atau kejadian
+ekstrem yang valid (seperti lonjakan saat hari libur).
+
+         Metode statistik yang umum digunakan untuk mendeteksi pencilan adalah metode
+Interquartile Range (IQR). Metode ini memanfaatkan kuartil data untuk mengukur dispersi
+statistik. IQR didefinisikan sebagai selisih antara kuartil ketiga (3) dan kuartil pertama
+(1). Berdasarkan aturan Tukey Fences, sebuah titik data dianggap sebagai pencilan jika
+nilainya berada di luar batas toleransi berikut:
+
+  = 1 - (1.5 × )  (2.2)
+
+  = 3 + (1.5 × )  (2.3)
+
+         Data yang berada di luar rentang tersebut diidentifikasi sebagai kandidat pencilan
+yang perlu dianalisis lebih lanjut validitasnya sebelum dilibatkan dalam proses pemodelan.
+
+2.10. Pengukuran Jarak (Distance Measure) dan Metode Penggabungan (Linkage)
+         Dalam operasional algoritma Agglomerative Hierarchical Clustering (AHC), akurasi
+
+hasil pengelompokan sangat bergantung pada dua komponen fundamental, yaitu metode
+pengukuran jarak antar-objek dan kriteria penggabungan antar-kelompok. Kedua parameter
+ini berfungsi sebagai landasan matematis untuk mengkuantifikasi tingkat kemiripan
+(similarity) atau disimilaritas data, yang selanjutnya digunakan untuk menentukan urutan
+pembentukan hierarki klaster. Bagian ini akan menguraikan metrik jarak yang digunakan
+untuk mengukur kedekatan antar-titik data serta metode linkage yang diterapkan untuk
+menggabungkan klaster pada setiap tahapan iterasi.
+                                                                               23
+
+2.10.1 Jarak euclidean (euclidean distance)
+    Euclidean Distance merupakan metrik pengukuran jarak yang paling fundamental dan
+
+umum diterapkan dalam algoritma clustering. Secara konseptual, metrik ini mengukur jarak
+garis lurus (straight-line distance) antara dua titik koordinat di dalam ruang multidimensi.
+Apabila dimisalkan terdapat dua titik  dan  dalam ruang berdimensi , maka jarak
+Euclidean antara keduanya dihitung menggunakan persamaan berikut:
+
+                                                                               (2.4)
+
+                     (, ) = ( - )2
+
+                                        =1
+
+Dimana:
+    a. (, ) : Jarak Euclidean antara hari  dan hari .
+    b.  : Volume penjualan (ternormalisasi) produk ke- pada hari .
+    c.  : Volume penjualan (ternormalisasi) produk ke- pada hari .
+    d.  : Jumlah total jenis produk/fitur yang dianalisis.
+    Dalam konteks penelitian ini, Euclidean Distance diadopsi untuk memetakan tingkat
+
+kemiripan antar-pola transaksi tiket pengunjung. Prinsip utamanya adalah semakin kecil
+nilai jarak Euclidean yang dihasilkan antara dua observasi (hari), semakin identik pola
+pembelian tiket pada kedua hari tersebut.
+
+2.10.2 Ward's method (metode ward)
+
+Dalam algoritma Agglomerative Hierarchical Clustering, terdapat berbagai metode
+
+untuk menentukan jarak antar-klaster (linkage), salah satunya adalah Metode Ward. Berbeda
+
+dengan Single Linkage atau Complete Linkage yang berbasis jarak fisik antar-titik, Metode
+
+Ward menggunakan pendekatan analisis varians untuk mengevaluasi jarak antar-klaster
+
+(Han et al., 2022).
+
+Prinsip utama Metode Ward adalah meminimalkan total varians dalam klaster (within-
+
+cluster variance). Untuk mengukur varians ini, digunakan nilai Error Sum of Squares (ESS).
+
+Rumus dasar untuk menghitung ESS pada sebuah klaster  adalah sebagai berikut:
+
+                      =  ( - )2                                                (2.5)
+
+                                    
+
+Keterangan:
+
+-  : Error Sum of Squares untuk klaster .
+-  : Nilai objek data  -  dalam klaster.
+                                                                                                           24
+
+    -  : Rata-rata (centroid) dari klaster .
+
+2.11. Evaluasi Cluster (Silhouette Coefficient)
+         Evaluasi terhadap kualitas hasil pengelompokan merupakan aspek krusial untuk
+
+memastikan bahwa struktur klaster yang terbentuk memiliki validitas statistik. Salah satu
+metrik evaluasi internal yang paling efektif dan banyak digunakan adalah Silhouette
+Coefficient. Metode ini diperkenalkan oleh Rousseeuw (1987) sebagai instrumen untuk
+memvalidasi konsistensi data di dalam klaster. Penelitian terbaru oleh Chicco et al. (2025)
+dalam PeerJ Computer Science juga mengonfirmasi bahwa Silhouette Coefficient
+memberikan informasi yang lebih akurat dibandingkan metrik lain seperti indeks Dunn atau
+Calinski-Harabasz, terutama pada klaster berbentuk konveks.
+
+2.11.1 Cara Kerja Silhouette Coefficient
+
+Mekanisme perhitungan Silhouette Coefficient () untuk setiap titik data 
+
+melibatkan dua komponen utama, yaitu kohesi (cohesion) dan separasi (separation).
+
+Komponen () merepresentasikan rata-rata jarak antara titik  dengan seluruh titik lain
+
+dalam satu klaster (kohesi), sedangkan () merepresentasikan rata-rata jarak antara titik 
+
+dengan seluruh titik pada klaster tetangga terdekat (separasi).
+
+Berdasarkan definisi tersebut, nilai Silhouette Coefficient untuk titik  dirumuskan
+
+sebagai berikut:
+
+                  ()  =     () - ()                              (2.6)
+                          max {(), ()}
+
+Atau dapat dijabarkan dalam bentuk fungsi kondisi:
+
+                       ()
+                  1 - () ,  () < ()
+
+                  () = 0     ,  () = ()                          (2.7)
+
+                    ()    -  1,             ()      >  ()
+                  { ()
+
+2.11.2 Interpretasi nilai silhouette coefficient
+         Nilai Silhouette Coefficient bergerak dalam rentang interval -1 hingga +1. Nilai ()
+
+yang mendekati +1 mengindikasikan bahwa data telah terkelompok dengan sangat baik
+(jarak intra-klaster rapat dan jarak antar-klaster jauh). Nilai mendekati 0 menandakan bahwa
+                                                                                                           25
+
+data berada di area perbatasan (boundary) yang ambigu, sedangkan nilai negatif mendekati
+-1 menunjukkan potensi kesalahan klasifikasi (misclassification).
+
+         Untuk mengevaluasi kualitas model secara global, digunakan nilai rata-rata dari
+seluruh (). Mengacu pada standar interpretasi Rousseeuw (1987), struktur pengelompokan
+dikategorikan sebagai berikut:
+
+    a. Struktur Kuat (Strong Structure): Jika nilai rata-rata > 0.7.
+    b. Struktur Wajar (Reasonable Structure): Jika nilai rata-rata berada di antara 0.5 -
+
+         0.7.
+    c. Struktur Lemah (Weak Structure): Jika nilai rata-rata berada di antara 0.25 - 0.5.
+    d. Tidak Terstruktur: Jika nilai rata-rata < 0.25.
+
+         Dalam penelitian ini, Silhouette Coefficient digunakan sebagai indikator utama untuk
+membandingkan validitas solusi pengelompokan dengan jumlah  yang berbeda, serta
+memastikan bahwa segmentasi pola kunjungan yang dihasilkan telah mencapai titik optimal.
+Keunggulan metrik ini, sebagaimana ditekankan oleh Starczewski & Krzyak (2015),
+terletak pada kompleksitas komputasi yang rendah namun tetap memberikan aturan
+interpretasi yang tegas.
+
+2.12 Pengujian Sistem
+         Pengujian perangkat lunak merupakan tahapan kritis untuk memastikan aplikasi
+
+memenuhi spesifikasi kebutuhan fungsional dan dapat diterima oleh pengguna akhir. Dalam
+konteks sistem penentuan strategi bundling berbasis data mining ini, pengujian dilakukan
+melalui dua pendekatan utama: pengujian fungsional (Black Box Testing) dan pengujian
+kegunaan (System Usability Scale).
+
+2.12.1 Black Box Testing
+         Black Box Testing adalah metodologi pengujian yang berfokus pada verifikasi
+
+fungsionalitas sistem dari perspektif eksternal, tanpa mempertimbangkan struktur kode
+internal (Pressman & Maxim, 2020). Metode ini mengevaluasi sistem berdasarkan input
+yang diberikan dan output yang dihasilkan, dengan tujuan mengidentifikasi ketidaksesuaian
+antara spesifikasi kebutuhan (requirements) dan perilaku sistem yang terimplementasi.
+
+         Pressman & Maxim (2020) menjelaskan bahwa black box testing bertujuan
+menemukan empat kategori kesalahan utama, yaitu: (1) Interface errors (tombol tidak
+responsif, validasi formulir yang gagal), (2) Data access errors (kegagalan impor dataset,
+kesalahan pembacaan format), (3) Performance errors (waktu respons lambat, konsumsi
+                                                                                                           26
+
+memori berlebih), dan (4) Initialization errors (kegagalan memuat pustaka algoritma, hasil
+tidak tersimpan).
+
+         Penelitian ini menerapkan teknik Equivalence Partitioning dan Boundary Value
+Analysis. Equivalence Partitioning membagi rentang input menjadi kelas valid dan invalid
+(misal: jumlah cluster  valid jika 2    10). Sementara itu, Boundary Value Analysis
+menguji nilai pada batas kelas (misal:  = 1, 2, 10, 11) untuk memastikan sistem
+menangani kasus batas (edge cases) dan fitur penyesuaian manual (override) dengan benar.
+Keunggulan metode ini adalah tidak memerlukan pengetahuan pemrograman dari penguji
+dan fokus pada perspektif pengguna akhir.
+
+2.12.2 System Usability Scale (SUS)
+         System Usability Scale (SUS) adalah instrumen standar yang dikembangkan untuk
+
+mengukur persepsi pengguna terhadap kegunaan (usability) suatu sistem. Meskipun pertama
+kali diperkenalkan oleh Brooke pada tahun 1996, validitas dan struktur faktorial SUS telah
+dikukuhkan kembali dalam penelitian modern oleh Lewis & Sauro (2018). SUS merupakan
+kuesioner yang terdiri dari 10 pernyataan dengan skala Likert 5 poin, menghasilkan skor
+tunggal (0-100) yang mudah diinterpretasikan.
+
+         Kuesioner SUS memiliki struktur mixed-tone: item ganjil (1, 3, 5, 7, 9) bernada
+positif, sedangkan item genap (2, 4, 6, 8, 10) bernada negatif. Hal ini bertujuan untuk
+mengurangi bias respons (response bias). Sepuluh pernyataan standar SUS mencakup aspek
+frekuensi penggunaan, kompleksitas sistem, kemudahan penggunaan, kebutuhan dukungan
+teknis, integrasi fungsi, konsistensi, kemampuan belajar (learnability), dan tingkat
+kepercayaan diri pengguna.
+
+    Perhitungan skor SUS mengikuti prosedur standar sebagaimana dijelaskan oleh Lewis
+& Sauro (2018):
+
+    - Item Ganjil (Positif): Kontribusi skor = Skor Respons User ­ 1.
+    - Item Genap (Negatif): Kontribusi skor = 5 ­ Skor Respons User.
+    - Skor Akhir: Jumlahkan seluruh kontribusi skor, lalu kalikan dengan 2,5.
+
+Persamaan matematis untuk perhitungan skor SUS adalah:
+
+  = 2,5 × (  ( - 1) +  (5 - ))                          (2.8)
+
+    
+                                                                            27
+
+         Terkait standar penilaian, Lewis & Sauro (2018) melakukan analisis komprehensif
+dan menegaskan kembali temuan empiris (dari studi klasik Bangor et al.) bahwa skor rata-
+rata global SUS adalah 68. Oleh karena itu, skor di atas 68 dianggap berada di atas rata-rata
+(above average). Untuk mempermudah interpretasi, Lewis & Sauro (2018) mengembangkan
+sistem penilaian huruf (grading) untuk mengonversi skor SUS seperti terlihat pada Tabel
+2.3.
+
+        Tabel 2.3. Interpretasi skor SUS
+
+Rentang Skor  Grade            Interpretasi Adjektiva  Kategori Penerimaan
+90 - 100      A+               Exceptional             Acceptable
+80,3 - 89     A                Excellent               Acceptable
+68 - 80,2     B                Good                    Acceptable
+51 - 67       C                OK                      Marginal
+25 - 50       D                Poor                    Marginal
+0 - 24        F                Awful                   Not Acceptable
+
+         Sistem dalam penelitian ini dinyatakan layak apabila memperoleh skor SUS minimal
+68. Mengacu pada Lewis & Sauro (2018), nilai ini ditetapkan sebagai ambang batas
+(threshold) yang mengindikasikan bahwa sistem masuk dalam kategori "Good" dan dapat
+diterima (acceptable) secara industri.
+
+         Penelitian oleh Lewis & Sauro (2018) juga memvalidasi bahwa SUS memiliki
+reliabilitas tinggi (Cronbach's alpha > 0.9) dan tetap valid meskipun diuji dengan sampel
+kecil (serendah 5 pengguna). Keunggulan SUS meliputi efisiensi waktu pengisian (2-3
+menit), independensi teknologi, dan statusnya sebagai standar industri.
+
+2.13 Penelitian Terdahulu
+         Penelitian ini telah mengkaji sejumlah penelitian sebelumnya yang relevan guna
+
+memperdalam pemahaman mengenai metodologi. Berikut ini pada Tabel 2.4 disajikan
+rangkuman penelitian-penelitian yang dijadikan referensi dalam pengembangan penelitian
+ini.
+Tabel 2.4 Penelitian terdahulu.
+
+Peneliti &   Judul Penelitian  Metode         Akurasi     Hasil
+  Tahun
+            Unsupervised       Agglomerative  Silhouette  Berhasil
+Rodríguez   Hierarchical       Hierarchical   Score:      mengelompokkan
+et al.      Clustering         Clustering     0.45 (5     wisatawan menjadi 5
+(2018)      Approach for                                  segmen berdasarkan
+                                                                               28
+
+            Tourism Market                      clusters    pola mobilitas. Cluster
+            Segmentation Based                  optimal)
+            on Crowdsourced                                 terbesar (40% data)
+            Mobile Phone Data
+                                                            merepresentasikan
+
+                                                            wisatawan dengan
+
+                                                            mobilitas tinggi antar-
+
+                                                            distrik.
+
+Abdalla     A Brief Comparison   Comparative    AHC         Perbandingan pada
+(2022)      of K-means and       Study: AHC vs  outperfor
+            Agglomerative        K-Means        med K-      UCI datasets (Iris &
+Van         Hierarchical                        Means
+Ruitenbee   Clustering                          dengan      Glass).        AHC
+k et al.    Algorithms on                       Euclidean
+(2023)      Small Datasets                      Distance    menghasilkan entropy
+
+D'Urso et                                                   lebih rendah dan
+al. (2021)
+                                                            standard deviation
+
+                                                            lebih stabil dibanding
+
+                                                            K-Means        ketika
+
+                                                            menggunakan
+
+                                                            Euclidean Distance.
+
+                                                            Literatur menyatakan
+
+                                                            AHC menghasilkan
+
+                                                            solusi kualitas lebih
+
+                                                            baik untuk small
+
+                                                            datasets.
+
+            A hierarchical       Agglomerative  Tidak       Clustering 3,000+
+            agglomerative        Hierarchical   disebutka
+            clustering for       Clustering     n secara    produk outdoor sports
+            product sales        (Ward's        spesifik
+            forecasting          method)                    dengan struktur data
+
+                                                            Date-Product-
+
+                                                            Quantity.      AHC
+
+                                                            menghasilkan
+
+                                                            aggregation clusters
+
+                                                            lebih          coherent
+
+                                                            dibanding
+
+                                                            pengelompokan bisnis
+
+                                                            tradisional. Efektif
+
+                                                            mengatasi intermittent
+
+                                                            demand dan high
+
+                                                            variation dalam sales
+
+                                                            quantity.
+
+            A Tourist            Hierarchical   Fuzzy       Mengidentifikasi 4
+            Segmentation Based   Clustering     Silhouette
+            on Motivation,       (Ward) +       : 0.47 (3   segmen wisatawan:
+            Satisfaction and     Fuzzy C-       clusters,
+            Prior Knowledge      medoids        m=1.3)      "Highly Satisfied
+            with a Socio-
+            Economic Profiling:                             Repeaters", "First-
+
+                                                            time       Explorers",
+
+                                                            "Culture Seekers", dan
+
+                                                            "Budget Travelers".
+                                                                                  29
+
+            A Clustering                                      Metode           Ward
+            Approach with
+            Mixed Information                                 menghasilkan
+
+                                                              kelompok         paling
+
+                                                              homogen dengan
+
+                                                              variance terendah.
+
+Chukhray    Tourism Product      Hierarchical +  Tidak        mengidentifikasi 4
+et al.      Consumers            Two-step        disebutka
+(2025)      Clustering for       Cluster         n secara     klaster konsumen
+            Developing the       Analysis        spesifik
+            Tailored Marketing                                berdasarkan faktor
+            Mix                  Hierarchical    Silhouette
+                                 Clustering +    Score:       produk, layanan, dan
+                                 Cosine          0.843 (5
+                                 Distance        clusters) -  risiko wisata. Klaster
+                                                 skor
+                                                 tertinggi    terbesar (Cluster 1,
+
+                                                              ~45%) didominasi
+
+                                                              oleh pemuda aktif
+
+                                                              yang bepergian dengan
+
+                                                              keluarga, sementara
+
+                                                              Cluster 3 (~30%)
+
+                                                              adalah wisatawan
+
+                                                              keluarga         yang
+
+                                                              memprioritaskan
+
+                                                              asuransi. Setiap klaster
+
+                                                              memiliki preferensi
+
+                                                              bauran pemasaran
+
+                                                              (marketing mix) yang
+
+                                                              berbeda, misalnya
+
+                                                              Cluster 1 lebih
+
+                                                              menyukai pemilihan
+
+                                                              opsi secara daring,
+
+                                                              sedangkan Cluster 3
+
+                                                              lebih         menyukai
+
+                                                              komunikasi langsung
+
+                                                              dengan manajer.
+
+Marzuki et  Hierarchical                                      mengembangkan
+al. (2025)  Clustering-Based
+            Geospatial Analysis                               sistem rekomendasi
+            for Tourism
+            Destination                                       destinasi        wisata
+            Recommender
+            System                                            berbasis geospasial
+
+                                                              menggunakan
+
+                                                              algoritma
+
+                                                              Hierarchical
+
+                                                              Clustering dengan
+
+                                                              pengukuran jarak
+
+                                                              Cosine Distance.
+
+                                                              Penelitian          ini
+
+                                                              menghasilkan struktur
+                                                                                  30
+
+                                                            klaster yang optimal
+
+                                                            dengan Silhouette
+
+                                                            Score sebesar 0.843.
+
+Guerard et  Tourism Profile      Hierarchical  Tidak        5 profil wisatawan
+al. (2025)  Measure for Data-    Clustering +  disebutka
+            Driven Tourism       Machine       n secara     teridentifikasi dengan
+            Segmentation         Learning      spesifik
+                                                            karakteristik unik
+                                 Eksperimen +  Bundling
+                                 Analisis      menurunk     berdasarkan durasi
+                                 Regresi       an
+                                               sensitivita  kunjungan,   jarak
+                                 Structural    s harga
+                                 Equation      23%          tempuh, dan preferensi
+                                 Modeling
+                                 (SEM)         R² = 0.68    aktivitas. Framework
+                                               untuk
+                                 Big Data      positive     mendeteksi   pola
+                                 Mining Model  emotion
+                                                            musiman dengan
+                                               Tidak
+                                               disebutka    akurasi 78.5%. AHC
+                                               n secara
+                                               spesifik     mengungguli  K-
+
+                                                            Means        dalam
+
+                                                            menangkap hierarki
+
+                                                            temporal wisatawan.
+
+Nicolau & Bundling and Loss                                 Eksperimen dengan
+Sellers Aversion
+(2020)                                                      486         responden
+
+                                                            menunjukkan
+
+                                                            konsumen     lebih
+
+                                                            toleran      terhadap
+
+                                                            kenaikan harga pada
+
+                                                            bundled products
+
+                                                            dibanding unbundled.
+
+                                                            Loss         aversion
+
+                                                            coefficient:  = -0.34
+
+                                                            untuk bundled vs  = -
+
+                                                            0.52 untuk unbundled.
+
+Liu et al.  How Do Hotel                                    Temuan       mereka
+(2025)      Bundling Strategies
+            Affect Customers'                               menunjukkan bahwa
+            Emotions and
+            Behaviors from the                              product bundling
+            Perspective of
+            Family Tourists?                                memiliki dampak
+
+                                                            paling       dominan
+
+                                                            terhadap niat perilaku
+
+                                                            (behavioral intention)
+
+                                                            dibandingkan strategi
+
+                                                            lainnya.
+
+Ruoran      Framework for                                   membuktikan bahwa
+Xu (2023)   Building Smart
+            Tourism Big Data                                penerapan model data
+            Mining Model for
+                                                            mining pariwisata
+
+                                                            cerdas (smart tourism
+                                                                                    31
+
+            Sustainable                                        data mining) sangat
+            Development
+            Framework for                                      krusial, di mana
+            Building Smart
+Ruoran      Tourism Big Data     Big Data        Tidak         implementasi yang
+Xu (2023)   Mining Model for     Mining Model    disebutka
+            Sustainable                          n secara      tepat pada empat kota
+            Development          Big Five        spesifik
+                                 Personality                   sampel        terbukti
+                                 Traits +        tidak
+                                 Machine         menyajika     mampu meningkatkan
+                                 Learning        n angka
+                                 Clustering      akurasi       pendapatan devisa
+                                                 prediksi,
+                                 Mixed-method    melainkan     pariwisata (Foreign
+                                 (Qualitative +  mengguna
+                                 SEM, n=800+)    kan           Exchange Income)
+                                                 indikator
+                                                 statistik     hingga lebih dari 70%.
+                                                 (margin of
+Moisa et    The Role of Digital                  error,        Studi di Cumbria (47
+al. (2025)  Footprints for                       varians,
+            Destination                          reliabilitas  juta
+            Competitiveness:                     )
+            Utilizing Mobile                                   pengunjung/tahun).
+            Technology for                       Tidak
+            Tourist                              disebutka     Mobile data + Big Five
+            Segmentation                         n secara
+            Integrating                          spesifik      personality       traits
+            Personality Traits
+                                                               menghasilkan
+
+                                                               segmentasi berbasis
+
+                                                               psychographic &
+
+                                                               behavioral insights.
+
+                                                               Segmentasi ini lebih
+
+                                                               akurat vs demografis
+
+                                                               tradisional,
+
+                                                               memungkinkan highly
+
+                                                               personalised
+
+                                                               experiences       dan
+
+                                                               targeted marketing.
+
+Xu, Wong,   Exploring event                                    Event         bundling
+& Tan       bundling: The
+(2016)      strategy and its                                   meningkatkan
+            impacts
+                                                               perceived event value
+
+                                                               dan destination loyalty
+
+                                                               intention.        SEM
+
+                                                               menunjukkan
+
+                                                               hubungan          positif
+
+                                                               antara event bundling,
+
+                                                               perceived         value,
+
+                                                               loyalty. Penelitian
+
+                                                               dilakukan di Macau
+
+                                                               dengan 2 event besar
+
+                                                               sebagai bundle.
+
+         Berdasarkan tinjauan terhadap berbagai literatur terdahulu, terlihat jelas bahwa
+penerapan algoritma penggalian data (data mining) cerdas memiliki peran krusial dalam
+                                                                                                           32
+
+manajemen strategis pariwisata modern. Dalam konteks segmentasi data yang memiliki
+hierarki temporal dan variansi tinggi seperti pola musim (seasonality), algoritma
+Agglomerative Hierarchical Clustering (AHC) secara konsisten terbukti lebih unggul dalam
+menangkap struktur data dibandingkan algoritma tradisional seperti K-Means (Guerard et
+al., 2025; Abdalla, 2022). Keunggulan AHC semakin diperkuat oleh efektivitasnya dalam
+mengatasi fluktuasi permintaan (intermittent demand) yang selaras dengan karakteristik
+musiman kunjungan wisata (Van Ruitenbeek et al., 2023), serta kemampuannya
+menghasilkan struktur klaster yang sangat akurat pada data pariwisata (Marzuki et al., 2025;
+D'Urso et al., 2021).
+
+         Di sisi lain, dari perspektif pemasaran, strategi product bundling terbukti secara
+ilmiah menjadi pendekatan yang sangat efektif untuk memengaruhi psikologi dan perilaku
+wisatawan. Berbagai temuan menunjukkan bahwa product bundling memiliki dampak
+dominan terhadap niat perilaku positif wisatawan (Liu et al., 2025) dan mampu menurunkan
+sensitivitas harga konsumen hingga 23% karena efek loss aversion (Nicolau & Sellers,
+2020), sekaligus meningkatkan loyalitas destinasi (Xu et al., 2016). Lebih lanjut, segmentasi
+wisatawan berbasis perilaku dan psikografis yang diolah melalui machine learning terbukti
+jauh lebih akurat dibandingkan segmentasi demografis konvensional, sehingga
+implementasinya mampu meningkatkan pendapatan pariwisata secara substansial (Moisa et
+al., 2025; Ruoran Xu, 2023; Chukhray et al., 2025).
+
+         Meskipun penelitian-penelitian terdahulu telah berhasil memvalidasi keunggulan
+metode AHC untuk segmentasi dan efektivitas bundling dalam pemasaran, masih terdapat
+celah penelitian (research gap) yang signifikan. Belum ada kajian yang secara langsung
+mengintegrasikan analisis klastering berbasis seasonality menggunakan AHC sebagai
+landasan utama dalam merumuskan paket product bundling pada destinasi wisata alam.
+Penelitian ini hadir untuk mengisi celah tersebut dengan mengimplementasikan AHC pada
+data historis kunjungan Wisata Padusan. Kebaruan (novelty) dari penelitian ini terletak pada
+pemanfaatan hasil klastering musiman yang tidak hanya berhenti sebagai analisis statistik,
+melainkan diekstraksi menjadi keputusan bisnis konkret untuk menciptakan strategi product
+bundling yang adaptif terhadap dinamika setiap musim kunjungan.
+33
+                                                  BAB III
+                                      METODE PENELITIAN
+         Metode penelitian ini akan menguraikan mengenai metode penelitian yang
+digunakan, meliputi tempat dan waktu penelitian, alat dan materi yang diperlukan, tahapan
+pelaksanaan penelitian, serta rancangan dan evaluasi sistem yang akan dibangun.
+
+3.1 Tempat dan Waktu Penelitian
+         Bagian ini menjelaskan lokasi dan periode waktu pelaksanaan penelitian yang
+
+menjadi landasan utama dalam proses pengumpulan data dan analisis.
+
+3.1.1 Tempat penelitian
+         Penelitian ini direncanakan bertempat pada unit bisnis Pemandian Air Panas Padusan
+
+yang dikelola oleh PT Palawi Risorsis, Kabupaten Mojokerto, sebagai objek studi kasus
+utama untuk pengambilan data transaksi dan observasi lapangan. Selanjutnya, proses
+komputasi, pengembangan sistem akan dilakukan menggunakan fasilitas di Laboratorium
+Komputer Artificial Intelligence 3.15 (AI Lab), Gedung Medang, Kampus B, Universitas
+Airlangga.
+
+3.1.2 Waktu penelitian
+         Pelaksanaan penelitian dimulai pada bulan Januari 2026 dan dirancang selesai pada
+
+Juni 2026. Selama periode pengembangan sistem, proses yang akan di lakukan adalah studi
+literatur, pengumpulan data, pengembangan sistem, hingga penyusunan laporan akhir.
+
+3.2 Alat dan Materi Penelitian
+         Untuk mendukung pelaksanaan penelitian mulai dari tahap pengolahan data,
+
+implementasi algoritma, hingga penyusunan laporan, digunakan alat dan materi dengan
+rincian sebagai berikut:
+
+3.2.1 Alat penelitian
+    Alat penelitian terdiri dari perangkat keras (hardware) dan perangkat lunak (software)
+
+yang saling mendukung dalam proses komputasi dan pengembangan sistem.
+
+                                                     33
+                                                                     34
+
+a. Perangkat keras (Hardware)
+
+    Perangkat keras yang digunakan adalah satu unit komputer jinjing (laptop) dengan
+spesifikasi teknis yang tertera pada Tabel 3.1, yang dinilai memadai untuk menangani
+
+komputasi matriks jarak pada algoritma Hierarchical Clustering.
+        Tabel 3.1. Spesifikasi hardware
+
+Hardware     Spesifikasi
+
+Merek/Tipe   Lenovo LOQ 15IRX9.
+
+Processor    13th Gen Intel(R) Core(TM) i7-13650HX 2.60 GHz.
+
+Installed RAM 12,0 GB.
+
+System Type  64-bit operating system, x64-based processor.
+
+Operating System Windows 11 Home Single Language, Version 24H2.
+
+b. Perangkat lunak (Software)
+
+         Perangkat lunak yang digunakan mencakup sistem operasi, bahasa pemrograman,
+dan pustaka (library) pendukung analisis data yang tertera pada Tabel 3.2 dibawah ini:
+
+Tabel 3.2. Spesifikasi software
+
+Software     Spesifikasi
+
+Language     Python 3.10.
+
+IDE          Visual Studio Code / Jupyter Notebook.
+
+Library Spesifik 12,0 GB
+
+System Type  a. Pandas: Manipulasi dataframe dan pivot table.
+Tools Lain   b. Scikit-learn: Implementasi AgglomerativeClustering.
+             c. SciPy: Membuat dendrogram dan linkage matrix.
+             d. Seaborn/Matplotlib: Visualisasi grafik.
+             a. Draw.io (Diagram).
+             b. Microsoft Excel (Validasi data mentah).
+
+3.2.2 Materi penelitian
+         Materi penelitian utama yang digunakan dalam studi ini adalah dataset transaksi
+
+penjualan tiket yang tersimpan dalam format elektronik Microsoft Excel Workbook (.xlsx).
+Format ini merupakan bentuk asli yang diperoleh langsung dari sistem pengarsipan
+perusahaan, sehingga struktur data yang digunakan terjamin keasliannya sesuai dengan
+standar operasional yang berlaku di PT Palawi Risorsis.
+
+         Secara kuantitas, dataset ini mencakup volume data sekitar 1.500 baris data (records)
+yang merepresentasikan hasil agregasi (rekapitulasi) transaksi harian sepanjang periode
+                            35
+
+penelitian (Januari 2022 hingga November 2025). Dengan demikian, pola yang akan
+dianalisis adalah karakteristik "musim" atau waktu kunjungan (seasonality). Spesifikasi data
+difokuskan pada atribut-atribut yang memiliki nilai informasi signifikan untuk pembentukan
+pola tersebut.
+
+         Rincian spesifikasi atribut data yang terdapat dalam file Excel tersebut dan akan
+digunakan sebagai input algoritma disajikan pada Tabel 3.3 berikut.
+Tabel 3.3. Rincian atribut dataset
+
+Nama Atribut Tipe Data                               Keterangan
+                            Tanggal pencatatan transaksi (format: dd/mm/yyyy),
+Tanggal        Date         yang berfungsi sebagai indeks unit analisis (hari).
+                            Identitas lokasi unit bisnis (contoh: "Padusan").
+Lokasi Wisata  String       Kategori umum layanan (contoh: "KTM",
+Jenis Tiket    Categorical  "Kendaraan", "Wahana").
+                            Nama spesifik produk layanan (contoh: "Weekend
+Nama Tiket     String       Anak", "Whirlpool Dewasa").
+                            Harga satuan tiket per item (contoh: "Rp 15.000,00").
+Harga          Currency     Total kuantitas fisik tiket yang terjual pada hari tersebut
+Jumlah         Float/Int    (Daily Quantity).
+                            Hasil kali harga dengan jumlah tiket.
+Total Kotor    Currency     Nilai potongan harga yang diberikan akibat adanya
+                            promosi, event, atau kebijakan manajemen tertentu.
+Nominal Diskon Currency     Total nilai moneter yang diperoleh.
+
+Pendapatan     Currency
+
+3.3 Metode Penelitian
+         Pelaksanaan penelitian ini direncanakan melalui serangkaian tahapan yang disusun
+
+secara sistematis dan logis untuk memastikan pencapaian tujuan penelitian yang telah
+ditetapkan. Kerangka kerja penelitian ini mengadopsi alur proses Knowledge Discovery in
+Databases (KDD) yang telah disesuaikan dengan kebutuhan studi kasus di PT Palawi
+Risorsis, mulai dari pemahaman masalah bisnis hingga tahap evaluasi sistem akhir.
+
+         Secara garis besar, seluruh rangkaian aktivitas penelitian digambarkan pada Gambar
+3.1. Penjelasan rinci mengenai tahapan yang berkaitan dengan pengolahan data dan
+perancangan model (tahap awal hingga perancangan rekomendasi) akan diuraikan pada sub-
+bab 3.3.1 hingga 3.3.6 dalam bab ini. Adapun tahap selanjutnya yang berfokus pada
+pengembangan perangkat lunak, yaitu Implementasi Sistem dan Evaluasi Sistem, akan
+dijelaskan secara terpisah dan mendetail masing-masing pada Sub-bab 3.4 dan Sub-bab 3.5.
+                                                                                                           36
+
+                             Gambar 3.1. Alur kerja metode penelitian
+3.3.1 Identifikasi masalah dan studi literatur
+
+         Tahap identifikasi masalah mengacu pada hasil studi pendahuluan melalui observasi
+dan wawancara dengan Desanto Dwi Jaya Putro (Staf Senior Digitalisasi PT Palawi Risorsis,
+27 November 2025). Berdasarkan hasil wawancara, teridentifikasi kendala operasional
+berupa sistem transaksi tiket yang masih parsial antar-wahana. Kondisi ini menyebabkan
+pola perilaku pengunjung terfragmentasi pada satu layanan spesifik, sehingga memicu
+hilangnya potensi pendapatan (lost opportunity). Selain itu, ditemukan bahwa aset data
+transaksi historis perusahaan belum dimanfaatkan secara optimal (underutilized) untuk
+mendukung pengambilan keputusan strategis.
+
+         Guna merumuskan solusi atas permasalahan tersebut, penelitian ini diperkuat dengan
+studi literatur yang difokuskan pada tiga aspek utama: strategi Product Bundling di industri
+pariwisata, teknis algoritma Agglomerative Hierarchical Clustering (AHC), serta metrik
+evaluasi Silhouette Coefficient.
+                                                                                                           37
+
+3.3.2. Pengumpulan data (Data collection)
+         Tahapan pengumpulan data dilakukan melalui pengajuan izin akses legal kepada
+
+manajemen PT Palawi Risorsis. Data yang digunakan merupakan data sekunder berupa
+rekam jejak transaksi penjualan tiket harian dengan periode 1 Januari 2022 hingga 30
+November 2025. Dataset ini bersifat agregat dan telah dipastikan tidak mengandung
+informasi pribadi pengunjung (anonymized) guna mematuhi standar etika kerahasiaan data.
+Gambaran bentuk data mentah (raw data) yang diperoleh disajikan pada Tabel 3.4.
+
+Tabel 3.4. Contoh data mentah
+
+No Tangg Lokasi Jenis Nama           Harg Ju Total Nomi Pendap
+
+al  Wisata Tiket Tiket               a      ml Kotor nal atan
+
+                                            ah           Disko
+
+                                                         n
+
+1 01/01/ Padusa KTM Weekend Rp 56 Rp                     Rp 0 Rp
+
+2022 n                         Anak  13.00      728.000         728.000
+
+                                     0
+
+2 01/01/ Padusa KTM Weekend Rp 34 Rp                     Rp 0 Rp
+
+2022 n                         Dewasa 15.50 61 53.645.          53.645.
+
+                                     0          500             500
+
+3 01/01/ Padusa Kenda Kendaraa Rp 74 Rp                  Rp 0 Rp
+
+2022 n  raan n R2                    2.000 2 1.484.0            1.484.0
+
+                                                00              00
+
+4 01/01/ Padusa Kenda Kendaraa Rp 40 Rp                  Rp 0 Rp
+
+2022 n  raan n R4                    3.000 6 1.218.0            1.218.0
+
+                                                00              00
+
+5 01/01/ Padusa Waha Whirlpool Rp 17 Rp                  Rp 0 Rp
+
+2022 n  na                     Dewasa 15.00 5 2.625.0           2.625.0
+
+                                     0          00              00
+
+3.3.3 Pra-pemrosesan data (Data preprocessing)
+         Tahap ini bertujuan untuk mengubah data mentah menjadi format yang bersih,
+
+konsisten, dan siap untuk dianalisis oleh algoritma. Mengingat data yang digunakan berasal
+dari operasional nyata yang rentan terhadap gangguan (noise) dan ketidakkonsistenan
+pencatatan, proses ini dilakukan melalui lima langkah strategis sebagai berikut:
+
+a. Pembersihan data (Data cleaning)
+         Langkah pertama difokuskan pada penanganan data yang tidak valid guna menjaga
+
+integritas analisis statistik. Dalam dataset transaksi mentah, seringkali ditemukan baris data
+                                                                                                           38
+
+yang mengandung derau (noise), seperti nilai kosong (missing value) atau input administratif
+yang tidak memiliki nilai kuantitas. Selain itu, ditemukan pula data pendapatan non-tiket
+seperti bagi hasil kemitraan (sharing profit) dan sewa lahan yang tidak mencerminkan
+kunjungan wisatawan individu. Keberadaan data ini dapat membiaskan perhitungan jarak
+antar-cluster. Oleh karena itu, aturan penyaringan (filtering rules) yang ketat akan diterapkan
+dalam proses ini. Seluruh baris data diperiksa berdasarkan kondisi atributnya, di mana data
+yang tidak memenuhi syarat akan dieliminasi dari dataset. Rincian aturan logika
+pembersihan data yang diterapkan disajikan pada Tabel 3.5.
+
+Tabel 3.5. Aturan logika pembersihan data transaksi
+
+   Kondisi Data      Status     Tindakan     Alasan Penghapusan/Penerimaan
+                                  Sistem
+Nilai "Jumlah" = 0   Tidak                  Transaksi tercatat namun tidak ada
+                     Valid   Dihapus        tiket fisik yang terjual (data
+Nilai "Jumlah" < 0                          sampah/uji coba).
+                     Tidak   Dihapus        Mengindikasikan transaksi pembatalan
+Atribut "Nama        Valid   Dihapus        (refund) atau koreksi stok (void).
+Tiket" Kosong        Tidak                  Identitas produk tidak diketahui
+(Null)               Valid   Dihapus        sehingga tidak dapat dikategorikan.
+Nama Tiket
+mengandung kata      Tidak   Dipertahankan  Merupakan pendapatan kemitraan
+"Sharing", "Sewa",   Valid                  bisnis (B2B) atau kontrak tetap yang
+"Fix", atau "Mitra"                         tidak merepresentasikan perilaku
+Nilai "Jumlah" > 0   Valid                  pembelian tiket pengunjung.
+dan Atribut                                 Data transaksi sah dan terealisasi
+Lengkap                                     secara finansial.
+
+b. Seleksi fitur (Feature Selection)
+         Dataset transaksi mentah memiliki sejumlah atribut yang tidak relevan dengan
+
+kebutuhan analisis pola kunjungan. Berdasarkan observasi terhadap struktur data, terdapat
+atribut administratif seperti "#No" (nomor urut) dan "Lokasi Wisata" yang dieliminasi
+karena bersifat redundan, mengingat penelitian ini telah dibatasi lingkupnya secara spesifik
+pada satu lokasi unit bisnis. Selain itu, atribut "Jenis Tiket" juga tidak digunakan dalam
+proses komputasi utama karena detail layanan sudah terwakili secara lebih spesifik dalam
+atribut "Nama Tiket".
+                                                                                                           39
+
+         Lebih lanjut, atribut bernilai moneter seperti "Harga", "Total Kotor", "Nominal
+Diskon", dan "Pendapatan" sengaja tidak dilibatkan dalam proses seleksi fitur. Hal ini
+bertujuan untuk menghindari bias pada perhitungan jarak (Euclidean distance), di mana item
+dengan harga mahal cenderung mendominasi klaster dibandingkan item murah yang
+bervolume tinggi. Oleh karena itu, untuk menjaga fokus analisis pada pola minat kunjungan,
+penelitian ini melakukan reduksi dimensi dengan hanya menyeleksi tiga atribut utama, yaitu:
+1. Tanggal: Sebagai penanda indeks waktu (time-series index) untuk agregasi data harian.
+2. Nama Tiket: Sebagai objek layanan yang akan dianalisis.
+3. Jumlah (Qty): Sebagai bobot nilai transaksi.
+
+c. Pemilihan dan Agregasi Fitur (Feature Selection & Aggregation)
+         Tantangan utama dalam penggunaan data transaksi mentah adalah tingkat
+
+granularitas label produk yang tidak konsisten. Di satu sisi, atribut "Nama Tiket" terlalu
+spesifik karena memisahkan varian demografis (contoh: "Tiket Masuk Dewasa" vs "Tiket
+Masuk Anak") yang sebenarnya merujuk pada satu entitas layanan yang sama. Di sisi lain,
+penggunaan atribut "Jenis Tiket" secara mentah juga berisiko menimbulkan bias karena
+pengelompokannya terlalu general dan sering kali menggabungkan layanan dengan nilai
+ekonomi yang sangat timpang.
+
+         Sebagai contoh kasus, kategori "Wahana" dalam dataset mencakup layanan
+"Whirlpool" (Rp 15.000) dan "DQOEM2" (Rp 150.000). Jika fitur hanya dipilih berdasarkan
+kolom "Jenis Tiket", maka algoritma akan menganggap kedua layanan ini setara. Hal ini
+berbahaya bagi proses clustering karena menyamakan produk massal berharga rendah
+dengan produk eksklusif berharga tinggi, yang dapat merusak pola segmentasi pengunjung.
+Oleh karena itu, penelitian ini tidak menggunakan kolom "Jenis Tiket" secara langsung,
+melainkan melakukan proses Agregasi Fitur (Feature Aggregation) manual.
+
+         Tujuan dari proses ini adalah memetakan berbagai varian nama tiket menjadi
+kategori produk baru yang terstandarisasi. Varian tiket yang memiliki fungsi sama (seperti
+varian Dewasa/Anak atau Weekday/Weekend) digabungkan (agregasi) untuk mendapatkan
+volume total permintaan. Sementara itu, layanan yang memiliki karakteristik unik atau nilai
+tinggi tetap dipisahkan sebagai fitur mandiri agar tidak mengaburkan profil klaster. Contoh
+skema pemetaan dan agregasi yang diterapkan disajikan pada Tabel 3.6.
+                                                                   40
+
+Tabel 3.6. Contoh skema generalisasi dan pemetaan kategori produk
+
+   Nama Produk Asli  Kategori Baru                    Keterangan
+        (Raw Data)    (Generalized)
+                     Akomodasi       Layanan menginap/camping digabung
+Pinus Weekday                        menjadi satu kategori tunggal.
+                     Akomodasi
+Flamboyan Weekend    Wahana Air      Layanan kolam air panas reguler (massal)
+Whirlpool Dewasa                     disatukan dalam satu kategori wahana.
+                     Tiket Masuk     Seluruh varian tiket masuk digabung
+Tiket Masuk Dewasa                   untuk melihat volume kunjungan total.
+                     Tiket Masuk
+Tiket Masuk Anak     Parkir          Layanan parkir disatukan.
+Parkir Roda 2        Parkir
+Parkir Roda 4        De Qoem (VIP)   Layanan eksklusif (harga tinggi)
+DQOEM2 / Sewa De                     dipisahkan dari kategori wahana biasa
+Qoem                                 agar tidak bias dengan tiket murah.
+
+d. Transformasi data (Data transformation)
+     Format data asli berupa Long Format (transaksi per baris) tidak dapat langsung diproses
+
+oleh algoritma clustering yang membutuhkan input berupa matriks. Oleh karena itu,
+dilakukan transformasi data menggunakan teknik Pivot Table untuk mengubah struktur data
+menjadi Wide Format atau Matriks Runtun Waktu (Time-Series Matrix).
+Dalam struktur baru ini:
+
+    1. Indeks baris merepresentasikan Tanggal (satu baris mewakili satu hari unik).
+         Transformasi ini krusial karena unit analisis yang dikelompokkan (clustering) dalam
+         penelitian ini adalah hari operasional, yang bertujuan untuk menemukan pola
+         musiman (seasonality) dalam kunjungan wisata.
+
+    2. Kolom (Fitur) merepresentasikan Kategori Produk hasil generalisasi (seperti Tiket
+         Masuk, Wahana Air, Camping).
+
+    3. Isi Sel berisi total Jumlah Penjualan Harian (Daily Quantity).
+Selain perubahan struktur, tahap ini juga mencakup penanganan nilai kosong (missing
+values). Secara alami, proses pivoting akan menghasilkan nilai NaN pada sel tanggal di mana
+suatu produk tidak terjual. Guna memastikan matriks dapat diproses oleh algoritma jarak
+(Euclidean), seluruh nilai kosong tersebut diimputasi (diisi) dengan nilai 0, yang secara logis
+merepresentasikan volume penjualan nihil pada hari tersebut.
+                                                                                                           41
+
+e. Normalisasi data (Data normalization)
+         Dataset transaksi memiliki variasi rentang nilai (range) yang sangat timpang antar
+
+variabel. Sebagai contoh, produk "Tiket Masuk" dapat terjual ribuan lembar per hari,
+sementara produk "Akomodasi" mungkin hanya terjual puluhan unit. Tanpa normalisasi,
+variabel dengan volume besar akan mendominasi perhitungan jarak Euclidean, sehingga
+pola pada variabel dengan volume kecil menjadi tidak terdeteksi oleh algoritma.
+
+         Untuk menyeimbangkan bobot setiap variabel, penelitian ini akan menerapkan
+metode Min-Max Scaler. Mekanisme perhitungan normalisasi ini mengacu sepenuhnya pada
+Persamaan 2.1 yang telah dipaparkan pada Sub-bab 2.2.1. Teknik ini mengubah skala data
+asli ke dalam rentang seragam 0 hingga 1 tanpa mengubah distribusi data aslinya.
+
+         Sebagai ilustrasi efektivitas metode ini, dilakukan simulasi perhitungan pada dua
+variabel yang timpang. Misalkan fitur Tiket Masuk memiliki rentang penjualan 100 hingga
+5.000 tiket, sedangkan fitur Akomodasi memiliki rentang 0 hingga 50 unit. Jika pada hari
+tertentu terjual 2.550 Tiket Masuk (nilai tengah) dan 25 unit Akomodasi (nilai tengah), maka
+perhitungan normalisasinya adalah:
+
+                                               2550 - 100 2450
+                              5000 - 100 = 4900 = 0,5
+
+                                                   25 - 0 25
+                                  50 - 0 = 50 = 0,5
+         Hasil perhitungan di atas menunjukkan bahwa setelah dinormalisasi, kedua variabel
+memiliki nilai skala yang sama (yaitu 0,5), meskipun volume fisik aslinya berbeda jauh. Hal
+ini memastikan bahwa setiap jenis layanan memiliki kontribusi bobot yang setara dalam
+proses pembentukan cluster.
+
+f. Penanganan outliers (Outlier detection)
+         Selain pembersihan data dasar, penelitian ini juga akan melakukan analisis terhadap
+
+data pencilan (outlier) untuk membedakan antara data anomali akibat kesalahan sistem dan
+lonjakan kunjungan yang wajar (legitimate spikes). Metode deteksi yang akan digunakan
+adalah Interquartile Range (IQR), dengan menghitung selisih antara kuartil atas (3) dan
+kuartil bawah (1). Batas ambang (threshold) ditentukan menggunakan rumus pagar Tukey
+(Tukey Fences) dengan koefisien 1,5.
+
+         Sebagai ilustrasi penerapan metode ini pada atribut "Tiket Masuk", dilakukan
+simulasi perhitungan menggunakan Persamaan 2.2 dan 2.3 berdasarkan distribusi data harian
+sebagai berikut:
+                                                                                                           42
+
+                             = 3 - 1 = 800 - 350 = 450
+         Berdasarkan nilai IQR tersebut, batas toleransi data dihitung menggunakan
+persamaan:
+
+                = 1 - (1,5 × ) = 350 - 675 = -325
+                  = 3 + (1,5 × ) = 800 + 675 = 1475
+
+         Dalam simulasi tersebut, misalkan ditemukan data penjualan harian sebesar 3.500
+tiket. Secara matematis, nilai ini melampaui batas atas (1.475), sehingga sistem akan
+melabelinya sebagai outlier.
+
+         Namun, penelitian ini menerapkan validasi logika bisnis pariwisata, di mana
+lonjakan angka yang ekstrem sering kali merepresentasikan karakteristik musim puncak
+(peak season) yang justru merupakan pola penting untuk segmentasi. Oleh karena itu, data
+3.500 tiket tersebut tidak akan dihapus, melainkan tetap dipertahankan sebagai data yang
+valid (legitimate spike). Penghapusan data (removal) hanya akan diberlakukan jika
+ditemukan nilai yang tidak masuk akal secara fisik, seperti nilai negatif atau nilai yang
+melampaui kapasitas maksimum wahana yang diindikasikan sebagai kesalahan input atau
+kerusakan sensor.
+
+3.3.4 Proses clustering
+         Secara spesifik, tujuan utama clustering pada penelitian ini adalah untuk
+
+mengidentifikasi segmentasi pola musim kunjungan sekaligus memetakan asosiasi produk,
+yaitu kombinasi wahana apa saja yang memiliki kemiripan tren permintaan pada waktu-
+waktu tersebut. Wawasan inilah yang akan menjadi landasan objektif dalam perumusan
+rekomendasi product bundling.
+
+         Setelah data transaksi ditransformasi menjadi matriks runtun waktu yang
+ternormalisasi, tahap inti penelitian ini adalah penerapan algoritma Agglomerative
+Hierarchical Clustering (AHC). Pendekatan bottom-up ini dipilih untuk memetakan struktur
+data secara hierarkis tanpa memerlukan penetapan jumlah kelompok () di awal proses.
+Proses komputasi clustering akan dilaksanakan melalui tiga tahapan teknis utama sebagai
+berikut:
+
+a. Pengukuran jarak (Distance measurement)
+         Langkah fundamental dalam algoritma Agglomerative Hierarchical Clustering
+
+(AHC) adalah mengukur tingkat kemiripan antar-objek data. Dalam penelitian ini, objek
+yang diukur direpresentasikan sebagai vektor penjualan harian yang telah dinormalisasi.
+                                                                                                           43
+
+Untuk mengukur kedekatan antar-vektor tersebut, digunakan metrik Jarak Euclidean
+(Euclidean Distance). Prinsip dasarnya adalah semakin kecil nilai jarak antara dua hari
+transaksi, semakin identik pola pembelian tiket dan layanan pada kedua hari tersebut.
+
+         Sesuai dengan Persamaan 2.4 pada Bab 2.7.1, jarak dihitung sebagai akar kuadrat
+dari selisih kuadrat antar-atribut. Sebagai ilustrasi, dilakukan simulasi perhitungan untuk
+membandingkan kedekatan pola antar-hari. Dimisalkan terdapat data sampel Hari A, Hari B,
+dan Hari C dengan komposisi atribut ternormalisasi sebagai berikut:
+
+    a. Hari A: [Tiket: 0.70, Parkir: 0.60, Wahana: 0.40, Akomodasi: 0.12]
+    b. Hari B: [Tiket: 0.68, Parkir: 0.62, Wahana: 0.38, Akomodasi: 0.10]
+    c. Hari C: [Tiket: 0.20, Parkir: 0.15, Wahana: 0.10, Akomodasi: 0.85]
+
+Perhitungan jarak antara Hari A dan Hari B adalah sebagai berikut:
+  (, ) = (0.70 - 0.68)2 + (0.60 - 0.62)2 + (0.40 - 0.38)2 + (0.12 - 0.10)2
+           (, ) = 0.0004 + 0.0004 + 0.0004 + 0.0004 = 0.0016 = 0.04
+
+Sedangkan perhitungan jarak antara Hari A dan Hari C adalah:
+  (, ) = (0.70 - 0.68)2 + (0.60 - 0.15)2 + (0.40 - 0.10)2 + (0.12 - 0.85)2
+             (, ) = 0.25 + 0.2025 + 0.009 + 0.5329 = 1.0754  1.04
+
+         Berdasarkan hasil kalkulasi di atas, dapat diinterpretasikan bahwa Hari A dan Hari B
+memiliki nilai jarak yang sangat kecil (0.04), yang mengindikasikan bahwa kedua hari
+tersebut memiliki pola karakteristik yang sangat mirip (homogen), yaitu didominasi oleh
+wisatawan reguler dengan fokus pada wahana. Sebaliknya, jarak antara Hari A dan Hari C
+menunjukkan nilai yang signifikan (1.04), yang menandakan adanya perbedaan pola yang
+drastis, di mana Hari C merepresentasikan segmen pengunjung yang berfokus pada
+akomodasi atau perkemahan. Dalam proses clustering, algoritma akan cenderung
+menggabungkan Hari A dan Hari B ke dalam satu klaster yang sama sebelum
+mempertimbangkan Hari C.
+
+b. Kriteria penggabungan (Linkage criteria)
+         Setelah matriks jarak antar-data terbentuk, tahapan krusial berikutnya dalam
+
+algoritma AHC adalah menentukan aturan bagaimana dua klaster digabungkan pada setiap
+iterasi. Penelitian ini akan mengadopsi pendekatan Ward's Linkage Method (Metode Ward)
+yang menggunakan pendekatan analisis varians. Tujuan utamanya adalah meminimalkan
+                                                                                                           44
+
+total varians di dalam klaster (within-cluster variance) untuk menjaga tingkat homogenitas
+data dalam setiap kelompok yang terbentuk.
+
+         Prinsip operasional metode Ward didasarkan pada optimasi nilai Error Sum of
+Squares (ESS). Mengacu pada landasan teori yang telah dipaparkan dalam Sub-bab 2.8.2,
+algoritma akan mengevaluasi seluruh kemungkinan pasangan klaster dan hanya akan
+menggabungkan dua klaster yang menghasilkan kenaikan nilai ESS terkecil. Pendekatan ini
+dinilai sangat relevan untuk data transaksi tiket karena memiliki kecenderungan
+menghasilkan struktur klaster yang kompak, padat, dan memiliki ukuran yang relatif
+seimbang, sehingga mempermudah interpretasi profil segmen pengunjung secara bisnis.
+
+         Sebagai ilustrasi konkret mekanisme seleksi ini, dilakukan simulasi perhitungan pada
+menggunakan Persamaan 2.5 di mana algoritma harus memilih pasangan terbaik dari tiga
+klaster kandidat yang tersedia. Misalkan kondisi awal klaster adalah sebagai berikut:
+
+    a. Klaster A: [Hari 1, Hari 2, Hari 3] dengan varians internal () awal = 0.15
+    b. Klaster B: [Hari 4, Hari 5] dengan varians internal () awal = 0.08
+    c. Klaster C: [Hari 6] (data tunggal/singleton)
+    Algoritma kemudian melakukan kalkulasi terhadap kenaikan total error () untuk
+setiap skenario penggabungan yang mungkin terjadi:
+Skenario 1: Penggabungan Klaster A dan Klaster B
+
+                                              = 0.45
+                            (,) = 0.45 - (0.15 + 0.08) = 0.22
+Skenario 2: Penggabungan Klaster A dan Klaster C
+
+                                              = 0.28
+                         (,) = 0.28 - (0.15 + varians ) = 0.13
+Skenario 3: Penggabungan Klaster B dan Klaster C
+
+                                              = 0.19
+                         (,) = 0.19 - (0.08 + varians ) = 0.11
+         Berdasarkan komparasi nilai kenaikan error () di atas, skenario penggabungan
+Klaster B dan Klaster C menghasilkan nilai terendah, yaitu sebesar 0,11. Nilai ini lebih kecil
+dibandingkan opsi penggabungan A dan B (0,22) maupun A dan C (0,13). Oleh karena itu,
+sesuai prinsip metode Ward yang memprioritaskan homogenitas, algoritma akan memilih
+untuk menggabungkan Klaster B dan Klaster C pada iterasi ini, karena opsi tersebut
+memberikan dampak distorsi varians yang paling minimal terhadap struktur data.
+                                                                                                           45
+
+c. Pembentukan struktur hierarki (Dendrogram construction)
+         Proses pengelompokan data menggunakan metode Ward dijalankan melalui
+
+mekanisme iteratif. Pada tahap inisialisasi, setiap titik data (hari transaksi) diperlakukan
+sebagai satu klaster independen, sehingga terdapat total  klaster awal. Selanjutnya, pada
+setiap langkah iterasi, algoritma secara sistematis mengidentifikasi dan menggabungkan
+sepasang klaster yang menghasilkan kenaikan nilai Error Sum of Squares (ESS) paling
+minimal. Prosedur ini berlangsung secara sekuensial mereduksi jumlah kelompok menjadi
+ - 1,  - 2, dan seterusnya hingga seluruh entitas data terintegrasi sempurna menjadi satu
+klaster tunggal (single hierarchy).
+
+         Rekam jejak dari seluruh proses penggabungan hirarkis tersebut kemudian
+divisualisasikan dalam bentuk diagram pohon yang disebut Dendrogram. Dalam representasi
+visual ini, sumbu horizontal memetakan objek data individu, sedangkan sumbu vertikal
+merepresentasikan tingkat disimilaritas atau jarak penggabungan (fusion level). Ketinggian
+garis vertikal pada diagram mencerminkan seberapa besar perbedaan karakteristik antara dua
+kelompok yang disatukan; semakin tinggi posisi penggabungan, semakin besar variasi antar-
+klaster tersebut. Oleh karena itu, dendrogram menjadi instrumen vital dalam analisis untuk
+menentukan posisi pemotongan (cut-off) yang optimal, guna menghasilkan jumlah
+segmentasi pola kunjungan yang paling ideal dan interpretatif.
+
+3.3.5 Evaluasi dan validasi model
+         Setelah algoritma hierarchical clustering berhasil membentuk struktur hierarki
+
+(dendrogram), tahapan selanjutnya adalah melakukan evaluasi dan validasi guna
+menentukan jumlah kelompok (k) yang paling optimal serta menguji kualitas hasil
+pengelompokan tersebut. Tahapan ini akan melalui tiga mekanisme analisis utama, yaitu
+penentuan cut-off otomatis berdasarkan skor validasi, analisis visual dendrogram, dan
+interpretasi profil klaster (profiling).
+
+a. Penentuan dan pemilihan jumlah cluster
+         Dalam sistem yang dirancang, penentuan jumlah klaster () dilakukan melalui
+
+mekanisme hibrida yang menggabungkan kalkulasi otomatis algoritma dengan fleksibilitas
+keputusan manajerial. Secara default, sistem akan bekerja otomatis mencari jumlah klaster
+yang paling optimal secara statistik. Mekanismenya adalah dengan menghitung nilai
+Silhouette Score rata-rata untuk serangkaian kemungkinan  (mulai dari  = 2 hingga  =
+                                                                                                           46
+
+). Nilai  yang menghasilkan skor validitas tertinggi akan langsung diajukan oleh sistem
+sebagai rekomendasi utama.
+
+         Namun, sistem juga menyediakan fitur pemilihan manual yang memungkinkan
+pengguna untuk memasukkan nilai  yang berbeda jika dibutuhkan variasi strategi bisnis.
+Dalam kedua skenario tersebut (baik otomatis maupun manual), sistem menyajikan
+visualisasi Dendrogram untuk memberikan gambaran struktur data dan posisi pemotongan
+kelompok.
+
+         Sebagai ilustrasi mekanisme penentuan  berdasarkan struktur dendrogram tersebut,
+dilakukan simulasi analisis dengan parameter ketinggian (height) sebagai berikut:
+
+    - Teridentifikasi adanya garis vertikal yang signifikan pada rentang ketinggian sumbu
+         Y antara skala 2 hingga 6.
+
+    - Garis ambang batas (threshold) ditarik pada posisi ketinggian  = 4.
+    - Garis tersebut memotong 3 garis vertikal utama pada dendrogram.
+
+         Pemotongan garis dendrogram pada ketinggian sumbu  = 4 secara efektif membagi
+struktur data menjadi tiga kelompok terpisah ( = 3). Guna memverifikasi ketepatan
+keputusan ini, dilakukan analisis sensitivitas dengan membandingkan alternatif jumlah
+klaster di sekitarnya, yakni  = 2 dan  = 4. Langkah komparasi ini bertujuan untuk
+memastikan bahwa penetapan  = 3 merupakan konfigurasi yang paling stabil dan
+representatif sebelum dilanjutkan ke tahapan validasi statistik yang lebih mendalam.
+
+b. Validasi Kualitas dengan Silhouette Coefficient
+         Untuk memastikan bahwa konfigurasi jumlah klaster  yang dipilih memiliki
+
+struktur internal yang valid, akan dilakukan pengujian kualitas menggunakan metode
+Silhouette Coefficient. Metode ini diperkenalkan oleh Rousseeuw (1987) dan menjadi
+standar validasi utama dalam literatur data mining kontemporer (Han et al., 2022). Metode
+ini mengukur kualitas pengelompokan berdasarkan dua parameter: seberapa dekat setiap
+titik data dengan anggota lain dalam satu klaster (cohesion) dan seberapa jauh titik tersebut
+dari klaster tetangga terdekatnya (separation). Nilai koefisien ini berkisar antara -1 hingga
++1.
+
+         Dalam rencana penelitian ini, model dikategorikan valid dan diterima apabila nilai
+rata-rata Silhouette Score menunjukkan angka > 0.5. Penentuan ambang batas ini mengacu
+pada literatur Data Mining modern, salah satunya dijelaskan oleh Tan et al. (2019), yang
+                                                                                                           47
+
+menyatakan bahwa nilai koefisien siluet yang positif dan mendekati 1 mengindikasikan
+struktur klaster yang kuat.
+
+         Selain itu, standar kelayakan ini juga selaras dengan penelitian terapan terbaru oleh
+Sultana et al. (2021) dalam studi segmentasi pelanggan, yang menetapkan bahwa nilai rata-
+rata siluet di atas 0.5 merupakan indikator bahwa partisi data telah terdefinisi dengan baik
+(well-separated) dan layak digunakan untuk pengambilan keputusan bisnis. Sebaliknya,
+nilai di bawah 0.5 mengindikasikan struktur yang lemah atau tumpang tindih, sehingga
+memerlukan evaluasi ulang terhadap jumlah klaster yang dipilih.
+
+Sebagai contoh penerapan validasi ini, berikut adalah hasil perhitungan skor siluet untuk
+
+model dengan  = 3:
+
+a. Cluster 1: Skor rata-rata = 0.68 (Indikasi struktur kuat)
+
+b. Cluster 2: Skor rata-rata = 0.52 (Indikasi struktur wajar)
+
+c. Cluster 3: Skor rata-rata = 0.71 (Indikasi struktur kuat)
+
+Kalkulasi rata-rata Global:
+
+  =                          0.68 + 0.52 + 0.71               = 0.637
+
+                                                3
+
+Berdasarkan hasil kalkulasi di atas, diperoleh nilai rata-rata Silhouette Score global
+
+sebesar 0.637. Mengacu pada standar kelayakan model, pencapaian nilai yang melampaui
+
+ambang batas 0.5 ini menegaskan bahwa model pengelompokan yang terbentuk berstatus
+
+"Diterima/Valid", karena memiliki struktur internal yang valid dan terdefinisi dengan baik
+
+secara statistik (reasonable structure). Sebaliknya, apabila skor rata-rata yang diperoleh
+
+berada di bawah angka 0.5, maka prosedur penentuan jumlah klaster wajib dievaluasi ulang
+
+guna mendapatkan segmentasi yang lebih akurat.
+
+c. Interpretasi dan Profiling Cluster
+         Tahap dalam evaluasi model adalah menerjemahkan hasil perhitungan matematis
+
+menjadi wawasan bisnis (business insight) yang aplikatif. Proses ini dilakukan melalui
+teknik profiling, yaitu dengan menghitung nilai rata-rata dari setiap atribut penjualan (Tiket
+Masuk, Parkir, Wahana, Akomodasi) di dalam masing-masing klaster. Nilai centroid ini
+menjadi dasar untuk mengidentifikasi karakteristik musim kunjungan (seasonality) yang
+dominan.
+                                                                               48
+
+Berikut adalah simulasi tabel profil klaster berdasarkan nilai rata-rata atribut
+
+penjualan (data ternormalisasi):
+
+Tabel 3.7. Simulasi tabel profil klaster
+
+Cluster Tiket           Parkir Wahana               Akomodasi Label Segmen
+
+Masuk                                     Kolam
+
+Cluster 1 0.82          0.75              0.85      0.15      High Season /
+                                                    (Rendah)  Peak Days
+(Tinggi) (Tinggi) (Tinggi)                          0.78      Staycation /
+                                                    (Tinggi)  Weekend Pattern
+Cluster 2 0.45          0.40              0.30      0.10      Low Season /
+              (Sedang)  (Sedang)          (Rendah)  (Rendah)  Weekday
+
+Cluster 3 0.25          0.20              0.15
+
+(Rendah) (Rendah) (Rendah)
+
+Analisis terhadap sebaran nilai centroid pada tabel di atas mengungkap karakteristik pola
+waktu (seasonality) dari setiap segmen yang terbentuk:
+
+    - Klaster 1 (High Season / Peak Days)
+                  Pada kelompok hari ini, terjadi lonjakan penjualan yang signifikan secara
+
+         simultan pada Tiket Masuk, Parkir, dan Wahana Kolam. Pola data ini
+         merepresentasikan kondisi operasional pada Musim Puncak Liburan, seperti hari
+         libur nasional, libur sekolah, atau cuti bersama. Karakteristik utamanya adalah
+         volume pengunjung massal yang datang untuk rekreasi air full-day, namun memiliki
+         minat rendah untuk menginap karena keterbatasan kapasitas atau preferensi
+         kunjungan satu hari (one-day trip).
+    - Klaster 2 (Staycation / Weekend Pattern)
+
+                  Karakteristik unik klaster ini terlihat dari nilai atribut Tiket Masuk dan Parkir
+         yang moderat (sedang), namun memiliki nilai dominan tertinggi pada atribut
+         Akomodasi (0.78). Pola ini mengindikasikan karakteristik hari operasional Akhir
+         Pekan Biasa (Sabtu-Minggu), di mana profil kunjungan didominasi oleh wisatawan
+         yang bertujuan spesifik untuk bermalam (camping atau staycation). Penjualan
+         wahana air cenderung lebih rendah dibandingkan High Season, menandakan fokus
+         aktivitas pengunjung lebih pada suasana alam dan penginapan.
+    - Klaster 3 (Low Season / Weekday)
+
+                  Klaster ini mencatatkan nilai rata-rata terendah pada seluruh atribut penjualan
+         (mendekati 0.1 - 0.2). Pola ini merepresentasikan hari operasional biasa (Senin -
+         Jumat) dengan intensitas transaksi minimal. Segmen ini didefinisikan sebagai
+                                                                                                           49
+
+         periode permintaan rendah (Low Demand Period), di mana kunjungan bersifat
+         sporadis dan tidak membentuk pola keramaian pada wahana maupun akomodasi.
+
+3.3.6 Perancangan rekomendasi (Rule generation)
+         Tahap ini bertujuan untuk memformulasikan kombinasi tiket yang paling potensial
+
+guna memaksimalkan pendapatan perusahaan melalui strategi penjualan silang (cross-
+selling) yang disesuaikan dengan karakteristik waktu kunjungan (seasonality). Pendekatan
+yang digunakan mengacu pada strategi Mixed Bundling (Nicolau & Sellers, 2020), sebuah
+metode yang menawarkan fleksibilitas bagi pengunjung untuk tetap dapat membeli tiket
+secara terpisah atau memilih paket gabungan dengan insentif harga (diskon).
+
+         Secara teknis, mekanisme pembentukan aturan (rule generation) didasarkan pada
+identifikasi atribut produk yang dominan dalam setiap klaster hari. Mengacu pada konsep
+Cluster Profiling dan mekanisme thresholding yang telah dijelaskan, penelitian ini
+menetapkan parameter logis bahwa sebuah layanan dikategorikan memiliki permintaan
+tinggi pada musim tertentu apabila nilai centroid terstandarisasi melampaui ambang batas
+(threshold) > 0.5 atau berada di atas nilai median2.
+
+         Logika sistem dirancang untuk memberikan rekomendasi yang bersifat dinamis
+tergantung pada prediksi jenis hari operasional. Sebagai ilustrasi penerapan algoritma pada
+Klaster 1 (High Season / Peak Days), data centroid menunjukkan dominasi nilai yang
+signifikan pada dua atribut sekaligus, yaitu Tiket Masuk dan Wahana Kolam. Mengacu pada
+kondisi tersebut, mekanisme logika aturan diformulasikan sebagai berikut:
+
+ ( == High Season)
+      ( > )
+     (_ > )
+
+
+     = "   "
+
+         Eksekusi dari aturan logika di atas menghasilkan rekomendasi strategis agar
+manajemen memprioritaskan penjualan paket gabungan tiket masuk dan wahana air panas
+pada hari-hari libur/padat. Paket ini dirancang untuk menangkap volume pengunjung massal
+(crowd) yang memiliki pola kunjungan full-day recreation, sekaligus mempercepat antrean
+loket melalui penyederhanaan transaksi.
+
+         Selanjutnya, analisis pada Klaster 2 (Staycation / Weekend Pattern) memperlihatkan
+pola karakteristik berbeda, di mana dominasi nilai terpusat pada atribut Akomodasi (0.78),
+                                                                          50
+
+sementara atribut wahana air cenderung moderat. Berdasarkan pola waktu tersebut,
+algoritma menyusun struktur aturan sebagai berikut:
+
+ ( == Staycation Pattern / Cluster 2)
+     ( > )
+
+
+      = Paket Camping Adventure
+
+         Implikasi manajerial dari aturan tersebut adalah penawaran paket khusus yang
+berfokus pada aktivitas berkemah (camping) yang diaktifkan secara spesifik pada periode
+akhir pekan (Sabtu-Minggu).
+
+         Berdasarkan mekanisme logika tersebut, berikut adalah ringkasan luaran (output)
+rekomendasi paket wisata yang dihasilkan sistem berdasarkan konteks musim kunjungan:
+Tabel 3.8. Contoh rekomendasi paket
+
+Nama Paket  Komposisi Layanan                      Waktu Penerapan
+
+                                                   (Target Season)
+
+Paket Terusan Wahana Air Tiket Masuk + Wahana Kolam High Season / Peak Days
+
+                                                   (Cluster 1)
+
+                                                   (Libur Nasional, Lebaran,
+                                                   Sekolah)
+
+Paket Camping Adventure Tiket Masuk + Akomodasi Staycation / Weekend
+
+                                                   Pattern (Cluster 2)
+                                                   (Sabtu - Minggu)
+
+Paket Hemat Weekday Tiket Masuk + Parkir           Low Season / Weekday
+
+                                                   (Cluster 3)
+
+                                                   (Senin - Jumat Biasa)
+
+Seluruh rancangan strategi bundling yang dihasilkan sistem ini berfungsi sebagai
+
+referensi strategis berbasis data bagi pihak manajemen PT Palawi Risorsis. Daftar usulan
+
+skema paket ini bersifat fleksibel, di mana sistem akan menyarankan paket yang berbeda
+
+sesuai dengan prediksi kategori hari operasional yang akan datang, yang selanjutnya
+
+divalidasi dengan kebijakan finansial perusahaan.
+
+3.4 Rancangan Sistem
+         Perancangan sistem bertujuan untuk memvisualisasikan alur interaksi dan tampilan
+
+aplikasi yang akan dibangun. Rancangan ini mencakup Use Case Diagram untuk
+memodelkan fungsionalitas fitur, serta Desain Antarmuka (User Interface) untuk
+memberikan gambaran visual tata letak dasbor rekomendasi.
+                                                                                                           51
+
+3.4.1 Use case diagram
+         Use Case Diagram dirancang untuk memodelkan interaksi fungsional antara
+
+pengguna sistem dengan perangkat lunak. Guna mengakomodasi kebutuhan teknis dan
+bisnis perusahaan, aktor dalam sistem ini diklasifikasikan menjadi dua peran spesifik:
+
+    1. Staf internal IT: Memiliki hak akses untuk manajemen data teknis dan eksekusi
+         algoritma.
+
+    2. Tim Marketing/Keuangan: Bertindak sebagai pengambil keputusan yang
+         memanfaatkan hasil analisis untuk strategi bisnis.
+         Berdasarkan Gambar 3.2, sistem memiliki empat use case utama yang
+
+merepresentasikan alur kerja pengambilan keputusan dari hulu ke hilir. Hubungan antar-
+proses digambarkan menggunakan relasi asosiasi, include, dan extend dengan rincian
+sebagai berikut:
+
+                                Gambar 3.2. Diagram use case sistem.
+
+Deskripsi Fungsionalitas (Use Case):
+a. Mengelola Data Transaksi
+
+     Fungsionalitas ini merupakan gerbang awal sistem yang dikelola oleh Staf internal IT.
+Aktor dapat mengunggah (upload) file data mentah transaksi harian (format .xlsx) ke dalam
+basis data sistem, serta melakukan pembaruan atau penghapusan data jika diperlukan untuk
+memastikan validitas input.
+b. Menjalankan Analisis Clustering
+
+     Merupakan fitur eksekusi utama yang dijalankan oleh Staf internal IT. Saat aktor
+menjalankan perintah ini, sistem secara otomatis melakukan Pra-pemrosesan Data (include)
+                                                                                                           52
+
+terlebih dahulu meliputi pembersihan noise, imputasi nilai kosong, dan normalisasi sebelum
+kemudian menghitung algoritma AHC untuk membentuk klaster. Relasi include menegaskan
+bahwa pra-pemrosesan adalah tahapan wajib yang tidak terpisahkan dari proses analisis.
+c. Mengeksplorasi Strategi Bundling
+
+     Fitur ini dirancang khusus untuk Manajemen (Pemasaran & Keuangan) guna melihat
+visualisasi hasil analisis berupa dendrogram dan rekomendasi paket. Pada tahapan ini,
+terdapat dua fungsionalitas tambahan yang bersifat opsional (extend):
+· Mengubah Jumlah Cluster (k): Aktor dapat melakukan simulasi dengan mengubah
+
+     parameter  untuk melihat alternatif strategi segmentasi lain jika hasil default dirasa
+     kurang optimal.
+· Lihat & Ekspor Strategi: Aktor dapat mencetak hasil rekomendasi terpilih menjadi
+     laporan digital (PDF) sebagai bahan pendukung rapat manajemen atau laporan
+     keuangan.
+d. Lihat Riwayat Analisis9
+     Fitur ini berfungsi sebagai arsip strategi bagi Manajemen. Sistem menyimpan setiap
+hasil analisis yang pernah dilakukan, sehingga aktor dapat kembali mengakses data strategi
+periode sebelumnya (misalnya: membandingkan High Season tahun lalu dengan tahun ini)
+tanpa perlu meminta Staf internal IT melakukan komputasi ulang.
+
+3.4.3 Arsitektur sistem
+         Arsitektur sistem dirancang menggunakan pendekatan Input-Process-Output (IPO)
+
+untuk memvisualisasikan struktur global perangkat lunak serta alur transformasi data dari
+bentuk mentah (raw data) menjadi informasi strategis. Diagram ini memetakan mekanisme
+pemrosesan data secara linear mulai dari input data, pemrosesan logika algoritma, hingga
+luaran antarmuka, tanpa terikat pada perangkat keras fisik tertentu.
+                                                                                                           53
+         Detail rancangan arsitektur sistem dapat dilihat pada Gambar 3.3 berikut:
+
+Gambar 3.3. Arsitektur sistem.
+         Berdasarkan rancangan arsitektur di atas, mekanisme kerja sistem terdiri dari tiga
+
+lapisan komponen utama yang saling terhubung. Penjelasan rinci untuk setiap komponen
+adalah sebagai berikut:
+e. Masukan Data dan Parameter (Input Layer)
+
+     Tahap ini merupakan gerbang awal interaksi pengguna (Staf Internal PT Palawi) dengan
+     sistem. Terdapat dua entitas masukan utama pada tahap ini:
+    - Data Transaksi: Sistem menerima unggahan berkas data operasional mentah dalam
+
+         format Excel (.xlsx) yang berisi rekapitulasi penjualan harian sebagai sumber data
+         utama.
+    - Parameter Jumlah Cluster (): Sistem menyediakan kontrol bagi staf internal untuk
+         menentukan atau mengubah nilai parameter . Masukan ini bersifat interaktif, di
+         mana setiap perubahan pada nilai  akan secara langsung memicu instruksi
+         perhitungan ulang pada mesin pemrosesan tanpa harus mengunggah ulang data
+         transaksi.
+
+f. Data Processing Engine
+     Komponen ini adalah inti komputasi sistem yang menjalankan seluruh logika Data
+     Mining secara sekuensial. Di dalamnya terdapat sub-modul sebagai berikut:
+    - Modul Preprocessing: Bertugas membersihkan noise, mengimputasi data kosong,
+         dan melakukan normalisasi Min-Max. Proses ini krusial untuk memastikan bahwa
+                                                                                                           54
+
+         variabel dengan skala besar (seperti total harga) dan skala kecil (seperti jumlah tiket)
+         memiliki bobot yang setara (0 hingga 1) sebelum masuk ke perhitungan jarak.
+    - AHC Engine: Modul komputasi utama tempat algoritma Agglomerative Hierarchical
+         Clustering (AHC) dijalankan. Modul ini menghitung matriks jarak antar-hari dan
+         menyusun struktur hierarki (dendrogram) untuk mengelompokkan hari operasional
+         berdasarkan kemiripan polanya.
+    - Rule Generator: Berfungsi sebagai logika bisnis (business logic) yang
+         menerjemahkan hasil statistik centroid klaster menjadi narasi strategi berbasis waktu
+         (seasonality). Sebagai contoh, jika sebuah klaster teridentifikasi sebagai High Season
+         (dominasi Tiket Masuk dan Wahana Kolam), modul ini akan memformulasikan
+         rekomendasi paket "Terusan Wahana Air".
+
+g. Visualisasi dan Luaran (Visualization & Output Layer)
+     Tahap terakhir ini berfungsi menyajikan hasil pengolahan data kepada pengguna dalam
+     dua bentuk representasi:
+    - Dashboard Visualisasi: Menampilkan grafik Dendrogram untuk transparansi struktur
+         data, serta tabel strategi yang berisi profil segmen dan rekomendasi paket.
+    - Laporan Strategi (PDF): Fitur ekspor dokumen yang menyajikan hasil akhir strategi
+         bundling secara formal, yang siap digunakan sebagai dasar pengambilan keputusan
+         manajemen.
+         Alur ini juga dilengkapi dengan mekanisme umpan balik (feedback loop), di mana
+
+Staf Internal PT Palawi dapat mengevaluasi luaran pada dashboard. Jika hasil dirasa belum
+optimal, pengguna dapat kembali memberikan input parameter () yang baru, yang akan
+diproses ulang oleh sistem secara real-time.
+
+3.4.4. Alur Logika Sistem (System Flowchart)
+         Untuk memperjelas mekanisme pemrosesan data yang terjadi di dalam sistem,
+
+disusunlah System Flowchart yang menggambarkan urutan logika algoritma dari input data
+mentah hingga dihasilkannya strategi bundling. Berbeda dengan alur penelitian, diagram ini
+berfokus pada transformasi data harian di dalam perangkat lunak.
+
+         Alur logika sistem secara rinci disajikan pada Gambar 3.4 berikut:
+                                                                        55
+Gambar 3.4. Alur logika sistem.
+                                                                                                           56
+
+         Berdasarkan Gambar 3.5, alur pemrosesan sistem terdiri dari tahapan-tahapan
+sebagai berikut:
+
+    a. Inisialisasi & Agregasi Data:
+         Proses dimulai ketika Staf Internal mengunggah data transaksi mentah. Sistem secara
+         otomatis melakukan agregasi data berdasarkan tanggal, mengubah data transaksi
+         individu menjadi format time-series harian. Tahap ini krusial untuk mempersiapkan
+         unit analisis berbasis waktu (seasonality).
+
+    b. Pra-pemrosesan & Perhitungan Jarak:
+         Data harian yang telah terbentuk kemudian melalui tahap pembersihan (cleaning)
+         dan normalisasi Min-Max agar memiliki rentang nilai yang setara (0-1). Selanjutnya,
+         sistem menghitung matriks jarak (Euclidean Distance) untuk mengukur tingkat
+         kemiripan pola penjualan antar-hari.
+
+    c. Iterasi AHC & Dendrogram:
+         Menggunakan algoritma Agglomerative Hierarchical Clustering (AHC) dengan
+         metode Ward, sistem melakukan iterasi penggabungan klaster dari bawah ke atas
+         (bottom-up). Hasil dari proses hierarki ini langsung divisualisasikan dalam bentuk
+         grafik Dendrogram kepada pengguna.
+
+    d. Penentuan Cut-off & Profiling Musim:
+         Pengguna memasukkan parameter jumlah klaster () untuk memotong dendrogram.
+         Berdasarkan potongan tersebut, sistem menghitung nilai rata-rata (centroid) setiap
+         kelompok untuk melakukan Profiling Musim. Pada tahap ini, sistem
+         mengidentifikasi mana klaster yang merupakan High Season (ramai), Staycation
+         Pattern, atau Low Season.
+
+    e. Rule Generation & Evaluasi:
+         Berdasarkan profil musim yang teridentifikasi, sistem menjalankan logika aturan
+         (Rule Generation) untuk merekomendasikan paket bundling yang relevan (misalnya:
+         Paket Terusan untuk High Season). Pengguna dapat melihat hasilnya pada
+         dashboard. Jika rekomendasi dirasa kurang sesuai, pengguna dapat kembali
+         memasukkan nilai  yang berbeda (mekanisme looping) hingga ditemukan strategi
+         yang paling optimal.
+
+    f. Finalisasi:
+         Jika strategi telah disetujui, pengguna dapat mencetak laporan dalam format PDF dan
+         sistem akan menyimpan hasil tersebut ke dalam riwayat analisis.
+                                                                                                           57
+3.4.5 Perancangan Basis Data
+
+       Perancangan basis data dilakukan untuk mengelola penyimpanan riwayat hasil analisis
+klasterisasi. Mengingat sistem ini berbasis pengolahan data transaksi flat-file (Excel), basis
+data difungsikan sebagai penyimpan metadata hasil eksekusi algoritma AHC, sehingga
+pengguna dapat mengakses kembali strategi yang pernah dihasilkan tanpa perlu melakukan
+komputasi ulang.
+
+       Perancangan dimodelkan menggunakan Conceptual Data Model (CDM) dan Physical
+Data Model (PDM).
+a. Conceptual Data Model (CDM)
+
+       Berdasarkan analisis kebutuhan sistem, terdapat dua entitas utama yang terlibat dalam
+penyimpanan riwayat, yaitu entitas Users dan entitas Riwayat Analisis. Hubungan antar-
+entitas didefinisikan pada gambar 3.5 dengan penjelasan sebagai berikut:
+1. Users: Merupakan entitas yang mempresentasikan pengguna sistem yang memiliki hak
+
+     akses untuk melakukan proses klasterisasi.
+2. Riwayat Analisis: Merupakan entitas yang menyimpan rekam jejak hasil perhitungan,
+
+     meliputi tanggal eksekusi, parameter jumlah klaster (), dan lokasi file laporan yang
+     dihasilkan.
+3. Relasi: Hubungan antara Admin dan Riwayat Analisis adalah One-to-Many (1: ), yang
+     berarti satu orang admin dapat melakukan dan menyimpan banyak kali proses analisis
+     klasterisasi.
+
+                           Gambar 3.5. Conceptual Data Model (CDM).
+                                                                                                           58
+
+b. Physical Data Model (PDM)
+         PDM merupakan representasi fisik dari perancangan database yang akan
+
+diimplementasikan ke dalam sistem manajemen basis data (DBMS) MySQL. Struktur tabel
+yang dirancang pada gambar 3.6.
+
+              Gambar 3.6. Physical Data Model (PDM)
+
+c. Kamus Data (Data Dictionary)
+        Berikut adalah rincian struktur tabel yang digunakan dalam sistem:
+
+   1. Tabel Users (users)
+        Tabel ini berfungsi untuk menyimpan data otentikasi pengguna sistem, berikut detail
+        atribut dalam tabel users di jelaskan pada tabel 3.9.
+        Tabel 3.9. Struktur tabel user.
+
+Nama Kolom    Tipe Data  Panjang  Keterangan
+id_user       INT        11       Identitas unik pengguna (Primary Key).
+username      VARCHAR    50       Nama akun yang digunakan saat form
+                                  Login.
+password      VARCHAR    255      Kata sandi rahasia untuk Login
+                                  (Terenkripsi).
+nama_lengkap  VARCHAR    100      Nama asli staf untuk ditampilkan di
+                                  profil/riwayat.
+                                      59
+
+2. Tabel Riwayat Analisis (riwayat_analisis)
+    Tabel ini berfungsi sebagai arsip untuk menyimpan hasil konfigurasi dan luaran
+    algoritma AHC yang telah disetujui pengguna, berikut detail atribut dalam tabel
+    riwayat_analisis di jelaskan pada tabel 3.10.
+    Tabel 3.10. Struktur tabel riwayat_analisis.
+
+Nama Kolom        Tipe Data  Panjang  Keterangan
+id_riwayat        INT        11       Identitas unik riwayat (Primary
+id_user           INT        11       Key, Auto Increment).
+tanggal_proses    DATETIME   -        ID pengguna (Admin) yang
+jumlah_cluster_k  INT        11       melakukan eksekusi (Foreign Key).
+keterangan_hasil  TEXT       -        Mencatat tanggal dan jam saat
+                                      proses AHC dijalankan.
+file_laporan      VARCHAR    255      Menyimpan nilai parameter  yang
+                                      dipilih admin (misal: 3).
+                                      Ringkasan narasi strategi hasil
+                                      klaster (misal: Cluster 1: High
+                                      Season...).
+                                      Path atau lokasi file PDF laporan
+                                      (dendrogram & tabel) yang
+                                      disimpan di server.
+
+3.4.6. Rancangan antarmuka (User Interface)
+         Perancangan antarmuka pengguna (User Interface) bertujuan untuk menyediakan
+
+media interaksi yang intuitif antara sistem komputasi dengan pengguna awam (manajemen).
+Mengingat kompleksitas algoritma clustering yang berjalan di latar belakang, antarmuka
+dirancang sesederhana mungkin untuk menyembunyikan kerumitan teknis tersebut. Sistem
+ini mengadopsi konsep Dashboard Terintegrasi, di mana seluruh proses mulai dari input data
+hingga visualisasi hasil ditampilkan dalam satu halaman pandang utama (Single Page
+Application).
+
+         Rancangan tata letak (layout) aplikasi dibagi menjadi tiga panel utama, sebagaimana
+diilustrasikan pada Gambar 3.7.
+                                                                                                           60
+
+Gambar 3.7. Rancangan antarmuka (dashboard) sistem.
+1. Panel Kontrol (Sidebar Menu)
+Terletak di sisi kiri layar, panel ini berfungsi sebagai area navigasi dan input utama. Di
+dalamnya terdapat:
+
+    · Menu Dasbor & Riwayat: Tombol navigasi untuk berpindah antara halaman analisis
+         utama dan halaman "Riwayat Analisis".
+
+    · Tombol Upload Data: Untuk mengunggah file Excel (.xlsx) data transaksi.
+    · Status Rekomendasi Sistem: Area informasi yang menampilkan hasil perhitungan
+
+         otomatis algoritma, meliputi nilai  optimal yang disarankan serta nilai validitas
+         Silhouette Score (misal: 0,65). Informasi ini berfungsi sebagai acuan awal bagi user.
+    · Input Penyesuaian  (Manual Override): Kotak isian (input field) yang secara default
+         terisi dengan angka rekomendasi sistem. Kotak ini bersifat aktif (editable),
+                                                                                                           61
+
+         memungkinkan pengguna untuk melakukan perubahan jumlah klaster jika
+         diperlukan variasi strategi.
+    · Tombol Terapkan/Update: Tombol aksi untuk memproses ulang tabel hasil dan grafik
+         apabila pengguna melakukan perubahan pada nilai .
+
+2. Panel Visualisasi (Main Chart Area)
+Terletak di bagian tengah atas, area ini mendominasi layar untuk menampilkan Grafik
+Dendrogram. Grafik ini dirancang untuk memberikan transparansi struktur data,
+memperlihatkan bagaimana pengelompokan (hari operasional) terjadi dari bawah ke atas.
+Pada visualisasi ini, sistem juga akan menampilkan garis potong horizontal (cut-off line)
+yang posisinya menyesuaikan secara dinamis dengan nilai  yang sedang aktif.
+3. Panel Hasil Formulasi (Result Table)
+Terletak di bagian bawah, panel ini berisi tabel dinamis yang muncul setelah proses
+komputasi selesai. Tabel ini menampilkan informasi:
+
+    · Label Cluster: (Misal: Cluster 1 - High Season, Cluster 2 - Low Season).
+    · Profil Dominan: Penjelasan singkat mengenai karakteristik utama segmen tersebut
+
+         berdasarkan nilai centroid (Contoh: Minat Wahana Kolam Tinggi, Pembelian Tiket
+         Satuan).
+    · Usulan Strategi Bundling: Formulasi paket tiket yang disarankan sistem (Contoh:
+         Tiket Masuk + Kolam Dewasa).
+    · Tombol "Simpan & Cetak Laporan": Tombol aksi final yang berfungsi ganda. Saat
+         ditekan, sistem akan menyimpan metadata hasil analisis (tanggal, nilai , dan gambar
+         dendrogram) ke dalam basis data sebagai riwayat, sekaligus mengunduh (download)
+         laporan hasil dalam format PDF.
+
+4. Halaman Riwayat Analisis (History Page)
+Merupakan halaman antarmuka tambahan yang diakses melalui sidebar. Halaman ini
+menampilkan tabel daftar riwayat analisis yang pernah dilakukan oleh admin. Tabel memuat
+kolom Tanggal Analisis, Parameter , dan Ringkasan Hasil. Pengguna dapat menekan
+tombol "Lihat Detail" pada salah satu riwayat untuk memanggil kembali grafik dendrogram
+dan strategi bundling yang tersimpan tanpa perlu melakukan unggah data dan perhitungan
+ulang. Pada halaman detail ini juga disediakan tombol unduh PDF secara dinamis.
+                                                                                                           62
+
+3.5 Evaluasi Sistem
+         Tahap ini direncanakan akan dilakukan setelah proses implementasi kode program
+
+selesai. Evaluasi sistem dalam penelitian ini akan dibagi menjadi dua mekanisme pengujian
+utama, yaitu pengujian fungsional (Functional Testing) dan pengujian penerimaan pengguna
+(User Acceptance Testing).
+
+3.5.1 Pengujian Fungsional (Black Box Testing)
+         Pengujian fungsional akan dilakukan menggunakan metode Black Box Testing.
+
+Metode ini berfokus pada validasi fungsionalitas input dan output perangkat lunak tanpa
+memeriksa struktur kode internal (source code) program. Tujuannya adalah untuk
+menemukan potensi kesalahan (error) pada fungsi-fungsi antarmuka, akses basis data,
+kinerja, inisialisasi, dan terminasi sistem.
+
+         Skenario pengujian disusun untuk memverifikasi fitur-fitur utama sistem, mulai dari
+proses input data transaksi hingga pencetakan hasil strategi bundling. Rancangan rencana
+pengujian Black Box yang akan dilaksanakan dapat dilihat pada Tabel 3.11.
+
+Tabel 3.11. Rencana pengujian black box
+
+No Skenario  Butir Uji                   Hasil yang Diharapkan
+
+Pengujian
+
+1 Unggah Data Unggah file data Sistem berhasil membaca file,
+
+             transaksi (format menampilkan preview data, dan
+
+             .xlsx/.csv)                 menyimpannya ke database.
+
+2 Eksekusi   Klik tombol "               Sistem menjalankan cleaning, normalisasi,
+
+Analisis     Terapkan/Update " dan algoritma AHC di latar belakang tanpa
+
+                                         error.
+
+3 Penetapan  Membuka halaman Sistem secara otomatis menampilkan:
+
+Jumlah Cluster visualisasi hasil 1. Grafik Dendrogram.
+
+(Otomatis)                               2.Nilai rekomendasi  optimal.
+
+                                         3. Status Silhouette Score.
+
+4 Fitur Manual Mengubah angka 1.Garis potong pada Dendrogram bergeser
+
+Override     pada input "Ubah sesuai input baru.
+
+             Jumlah Cluster              2.Tabel hasil strategi diperbarui sesuai
+
+             ()" lalu klik               jumlah klaster baru.
+
+             "Terapkan/Update"
+
+5 Ekspor Laporan Klik tombol "Cetak Sistem mengunduh dokumen laporan berisi
+
+             PDF"                        detail segmentasi dan rancangan strategi
+
+                                         bundling yang terbentuk.
+                                                                                                           63
+
+3.5.2 Pengujian Penerimaan Pengguna (User Acceptance Testing)
+         Setelah sistem dinyatakan valid secara fungsional, tahap selanjutnya adalah User
+
+Acceptance Testing (UAT) untuk mengukur tingkat kegunaan (usability) dan kepuasan
+pengguna terhadap antarmuka serta luaran sistem. Mengingat pengguna sistem ini adalah
+kelompok terbatas (expert users) di lingkungan manajemen PT Palawi Risorsis, metode
+evaluasi yang digunakan adalah System Usability Scale (SUS). Metode ini dipilih karena
+terbukti valid dan memiliki reliabilitas tinggi (Cronbach's > 0.9) meskipun diuji dengan
+sampel kecil, sebagaimana divalidasi oleh Lewis & Sauro (2018).
+
+         Instrumen pengujian menggunakan kuesioner standar yang terdiri dari 10 pernyataan
+dengan respons Skala Likert 1 sampai 5. Data kuesioner yang terkumpul selanjutnya diolah
+untuk mendapatkan skor akhir usability menggunakan prosedur perhitungan yang telah
+diuraikan secara teoritis pada Sub-bab 2.10.2 dan Persamaan 2.8.
+
+         Sebagai ilustrasi perhitungan skor, dimisalkan seorang responden memberikan
+penilaian dengan total skor kontribusi dari item ganjil sebesar 14 dan total skor kontribusi
+dari item genap sebesar 16. Maka, perhitungan skor akhir usability untuk responden tersebut
+adalah:
+
+                        = (14 + 16) × 2,5 = 30 × 2,5 = 75
+         Hasil perhitungan tersebut menghasilkan skor tunggal dalam rentang 0 hingga 100.
+Untuk menentukan keberhasilan sistem, skor rata-rata yang diperoleh dari seluruh responden
+dikonversikan ke dalam kategori penerimaan (acceptability ranges). Sistem dalam penelitian
+ini ditetapkan layak diimplementasikan apabila skor rata-rata SUS mencapai nilai di atas 68.
+Mengacu pada interpretasi penilaian huruf (grading) yang disusun oleh Lewis & Sauro
+(2018) sebagaimana disajikan pada Tabel 2.2, skor di atas ambang batas tersebut
+dikategorikan minimal sebagai "Good" dan masuk dalam rentang "Acceptable".
+
+3.6 Jadwal Penelitian
+         Penelitian ini direncanakan akan dilaksanakan dalam kurun waktu 6 (enam) bulan,
+
+terhitung mulai bulan Januari 2026 hingga Juni 2026. Alokasi waktu disusun secara efektif
+untuk memastikan setiap tahapan penelitian, mulai dari persiapan awal hingga penyusunan
+laporan akhir, dapat terselesaikan tepat waktu. Rincian jadwal kegiatan disesuaikan dengan
+tahapan metodologi yang telah diuraikan sebelumnya dan disajikan pada Tabel 3.11 di bawah
+ini.
+                                                                          64
+
+Tabel 3.12. Jadwal pelaksanaan penelitian.
+
+No Kegiatan               Jan               Feb   Mar   Apr   Mei   Jun
+                          2026              2026  2026  2026  2026  2026
+1 Identifikasi Masalah &
+      Studi Literatur
+
+2 Pengumpulan Data
+3 Pra-pemrosesan Data
+4 Proses Clustering &
+
+      Visualisasi
+5 Evaluasi & Validasi
+
+      Model
+6 Perancangan Strategi
+
+      Bundling Tiket
+7 Perancangan & Evaluasi
+
+      Sistem
+8 Penyusunan Laporan
+
+      Akhir (Skripsi)
+                             DAFTAR PUSTAKA
+
+Abbasi-Moud, Z., Vahdat-Nejad, H., & Sadri, J. (2021). Tourism recommendation system
+
+based on semantic clustering and sentiment analysis. Expert Systems with
+
+Applications, 167, 114324. https://doi.org/10.1016/j.eswa.2020.114324
+
+Abdalla, H. I. (2022). A brief comparison of K-means and Agglomerative Hierarchical
+
+Clustering algorithms on small datasets. In Z. Qian, M. A. Jabbar, & X. Li (Eds.),
+
+Proceeding of 2021 International Conference on Wireless Communications,
+
+Networking and Applications (WCNA 2021) (pp. 641­652). Lecture Notes in Electrical
+
+Engineering, vol. 958. Springer. https://doi.org/10.1007/978-981-19-2456-9_64
+
+Afgani, N. (2019). Pengaruh kualitas pelayanan terhadap kepuasan pengunjung pemandian
+
+air panas Krakal (Doctoral dissertation, Universitas Putra Bangsa).
+
+Al Hazmi, N. N., & Setiawan, B. (2019). KUALITAS PRODUK WISATA DI KAWASAN
+
+PEMANDIAN AIR PANAS PADUSAN PACET MOJOKERTO. Cakra
+
+Wisata, 25(1), 15-25.
+
+Antonio, N., de Almeida, A., & Nunes, L. (2019). Big data in hotel revenue management:
+
+Exploring cancellation drivers to gain insights into booking cancellation behavior.
+
+Cornell  Hospitality         Quarterly,         60(4),                 298­319.
+
+https://doi.org/10.1177/1938965519851466
+
+Antonio, N., de Almeida, A., & Nunes, L. (2022). Data mining and predictive analytics for
+
+e-tourism. Dalam Z. Xiang, M. Fuchs, U. Gretzel, & W. Höpken (Eds.), Handbook of
+
+e-Tourism (hlm. 1­18). Springer. https://doi.org/10.1007/978-3-030-48652-5_29
+
+Bangor, A., Kortum, P. T., & Miller, J. T. (2008). An empirical evaluation of the System
+
+Usability Scale. International Journal of Human-Computer Interaction, 24(6), 574­
+
+594. https://doi.org/10.1080/10447310802205776
+
+Bangor, A., Kortum, P., & Miller, J. (2009). Determining what individual SUS scores mean:
+
+Adding an adjective rating scale. Journal of Usability Studies, 4(3), 114­123.
+
+Brooke, J. (1996). SUS: A 'quick and dirty' usability scale. Dalam P. W. Jordan, B. Thomas,
+
+B. A. Weerdmeester, & I. L. McClelland (Eds.), Usability evaluation in industry (hlm.
+
+189­194). Taylor & Francis.
+
+Brooke, J. (2013). SUS: A retrospective. Journal of Usability Studies, 8(2), 29­40.
+
+Chicco, D., Oneto, L., & Tavazzi, E. (2025). The Silhouette Coefficient and the Davies-
+
+Bouldin Index outperform more popular internal clustering evaluation metrics on
+
+                             65
+                                                                                                           66
+
+       seven of the most common partitioning algorithms and benchmark datasets. PeerJ
+       Computer Science, 11, e2558. https://doi.org/10.7717/peerj-cs.2558
+Chukhray, N., Yarmola, K., & Chukhrai, A. (2025). Tourism product consumers clustering
+       for developing the tailored marketing mix. Innovative Marketing, 21(1), 281­295.
+       https://doi.org/10.21511/im.21(1).2025.22
+Cozzio, C., Tokarchuk, O., & Maurer, O. (2021). The effect of price bundling on tourists'
+       extra expenditure: A mental budget approach. Current Issues in Tourism, 24(20),
+       2838­2842. https://doi.org/10.1080/13683500.2020.1849045
+Dolnicar, S. (2020). Market segmentation in tourism. Dalam J. Jafari & H. Xiao (Eds.),
+       Encyclopedia of Tourism (hlm. 1­4). Springer. https://doi.org/10.1007/978-3-030-
+       05324-6_52-1
+D'Urso, P., De Giovanni, L., Disegna, M., Massari, R., & Vitale, V. (2021). A tourist
+       segmentation based on motivation, satisfaction and prior knowledge with a socio-
+       economic profiling: A clustering approach with mixed information. Social Indicators
+       Research, 154(1), 335­360. https://doi.org/10.1007/s11205-020-02537-y
+Guerard, G., Gabot, Q., & Djebali, S. (2025). Tourism profile measure for data-driven
+       tourism segmentation. International Journal of Machine Learning and Cybernetics,
+       16, 7107­7132. https://doi.org/10.1007/s13042-024-02145-z
+Han, J., Kamber, M., & Pei, J. (2022). Data mining: Concepts and techniques (4th ed.).
+       Morgan Kaufmann Publishers.
+Huang, L., & Ho, J. (2022). The influence of bundling strategy on product performance.
+       Journal of Product & Brand Management, 31(6), 847­860.
+       https://doi.org/10.1108/JPBM-06-2020-2949
+Jorgensen, P. C. (2018). Software testing: A craftsman's approach (5th ed.). CRC Press.
+Kotler, P., Keller, K. L., & Chernev, A. (2021). Marketing management (16th ed.). Pearson
+       Education.
+Latul, D. A. P. (2014). TA: Perancangan Branding Wisata Pemandian Air Panas Padusan
+       Pacet Sebagai Upaya Meningkatkan Brand Awareness (Doctoral dissertation,
+       STIKOM Surabaya).
+Lewis, J. R., & Sauro, J. (2018). Item benchmarks for the System Usability Scale. Journal
+       of Usability Experience (JUX), 13(3), 158­167.
+Li, X., Chen, Y., & Harrison, N. J. (2023). Framework for building smart tourism big data
+       mining model for sustainable development. Sustainability, 15(6), 5162.
+       https://doi.org/10.3390/su15065162
+                                                                        67
+
+Liu, J., Cao, J., Hsu, F. C., Tao, R., & Mai, H. (2025). Exploring the impact of hotel bundling
+
+strategies on family tourists: an emotion regulation approach. Tourism Recreation
+
+Research, 1­17. https://doi.org/10.1080/02508281.2025.2450814
+
+Mai, K. N., Nguyen, H. M., & Vu, T. V. (2025). How do hotel bundling strategies affect
+
+customers' emotions and behaviors from the perspective of family tourists? Tourism
+
+Management, 106, 105043. https://doi.org/10.1016/j.tourman.2024.105043
+
+Moisa, C., Deac, L., Ttar, C., Videan, L., Rdulescu, A., & Krisztina, M. (2025). The role
+
+of digital footprints for destination competitiveness and engagement: Utilizing mobile
+
+technology for tourist segmentation integrating personality traits. Tourism
+
+Management, 106, 104995. https://doi.org/10.1016/j.tourman.2024.104995
+
+Murtagh, F., & Legendre, P. (2014). Ward's hierarchical agglomerative clustering method:
+
+Which algorithms implement Ward's criterion? Journal of Classification, 31(3), 274­
+
+295. https://doi.org/10.1007/s00357-014-9161-z
+
+Nicolau, J. L., & Sellers, R. (2020). Bundling and loss aversion. Journal of Business
+
+Research, 117, 256­264. https://doi.org/10.1016/j.jbusres.2020.05.053
+
+Núñez, H., Gonzalez-Abril, L., & Angulo, C. (2024). Machine learning applied to tourism:
+
+A systematic review. WIREs Data Mining and Knowledge Discovery, 14(4), e1549.
+
+https://doi.org/10.1002/widm.1549
+
+Perhutani. (2024). Pemandian Air Panas Padusan. Diakses pada 27 November 2025, dari
+
+https://www.perhutani.co.id/padusan
+
+Pressman, R. S., & Maxim, B. R. (2020). Software engineering: A practitioner's approach
+
+(9th ed.). McGraw-Hill Education.
+
+Rodríguez, J., Semanjski, I., Gautama, S., Van de Weghe, N., & Ochoa, D. (2018).
+
+Unsupervised hierarchical clustering approach for tourism market segmentation based
+
+on crowdsourced mobile phone data. Sensors, 18(9), 2972.
+
+https://doi.org/10.3390/s18092972
+
+Rousseeuw, P. J. (1987). Silhouettes: A graphical aid to the interpretation and validation of
+
+cluster analysis. Journal of Computational and Applied Mathematics, 20, 53­65.
+
+https://doi.org/10.1016/0377-0427(87)90125-7
+
+Saleh, M. I. (2024). Advantaging tourism through influencers: Applying transaction cost
+
+theory to recognize top hero, hub, and hygiene content tactics for tourism marketing.
+
+Journal  of  Travel                  Research,  64(2),                  408­426.
+
+https://doi.org/10.1177/00472875231214727
+                                                                                68
+
+Solano-Barliza, A., Rodríguez-Hernández, M. C., & López-Lezama, J. M. (2024).
+
+Recommender systems applied to the tourism industry: a literature review. Cogent
+
+Business            &     Management,                11(1),                     2367088.
+
+https://doi.org/10.1080/23311975.2024.2367088
+
+Solano-Barliza, A., López-Lezama, J. M., & Muñoz-Galeano, N. (2024). Recommender
+
+systems for tourism: An analysis of machine learning techniques. Information
+
+Technology & Tourism, 26, 87­124. https://doi.org/10.1007/s40558-023-00251-4
+
+Starczewski, A., & Krzyak, A. (2015). Performance evaluation of the silhouette index.
+
+Dalam L. Rutkowski et al. (Eds.), Artificial Intelligence and Soft Computing (hlm. 49­
+
+58). Springer. https://doi.org/10.1007/978-3-319-19369-4_5
+
+Tan, P. N., Steinbach, M., & Kumar, V. (2019). Introduction to data mining (2nd ed.).
+
+Pearson Education.
+
+Thaler, R. (1985). Mental accounting and consumer choice. Marketing Science, 4(3), 199­
+
+214. https://doi.org/10.1287/mksc.4.3.199
+
+Thaler, R. H. (1999). Mental accounting matters. Journal of Behavioral Decision Making,
+
+12(3), 183­206.
+
+Van Ruitenbeek, R. E., Koole, G., & Bhulai, S. (2023). A hierarchical agglomerative
+
+clustering for product sales forecasting. Decision Analytics Journal, 9, 100310.
+
+https://doi.org/10.1016/j.dajour.2023.100310
+
+Wei, X., Yu, S., & Li, X. (2025). Price it high if it is varied: Perceived heterogeneity and the
+
+effectiveness of discount framing strategies for travel packages. Journal of Travel
+
+Research. https://doi.org/10.1177/00472875231222263
+
+Wen, T., Leung, X. Y., Li, B., & Hu, L. (2021). Examining framing effect in travel package
+
+purchase: An application of double-entry mental accounting theory. Annals of Tourism
+
+Research, 90, 103265. https://doi.org/10.1016/j.annals.2021.103265
+
+Williamson, O. E. (1985). The economic institutions of capitalism. Free Press.
+
+Xu, J. B., Liu, J., & Ren, J. (2016). Event bundling: How hosting multiple events affects
+
+destination evaluations and loyalty. Journal of Destination Marketing & Management,
+
+5(2), 103­111. https://doi.org/10.1016/j.jdmm.2015.12.002
+
+Xu, Y. H., Wong, I. A., & Tan, X. S. (2016). Exploring event bundling: The strategy and its
+
+impacts.         Tourism  Management,                       52,                 455­467.
+
+https://doi.org/10.1016/j.tourman.2015.07.014
+
+Zeithaml, V. A., Bitner, M. J., & Gremler, D. D. (2018). Services marketing: Integrating
+
+customer focus across the firm (7th ed.). McGraw-Hill Education.
+69
+
