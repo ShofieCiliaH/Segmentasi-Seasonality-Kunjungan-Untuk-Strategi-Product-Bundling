@@ -81,6 +81,10 @@
               <span class="cluster-days">{{ cluster.day_count }} hari</span>
             </div>
             <p>{{ cluster.profile_text }}</p>
+            <div class="cluster-summary">
+              <span>Alasan rekomendasi</span>
+              <p>{{ cluster.recommendation_reason_short }}</p>
+            </div>
             <ul class="detail-list">
               <li><span>Paket</span><strong>{{ cluster.package_name }}</strong></li>
               <li><span>Komposisi</span><strong>{{ cluster.package_components }}</strong></li>

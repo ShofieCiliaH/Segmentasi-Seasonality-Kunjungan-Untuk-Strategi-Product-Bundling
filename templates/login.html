@@ -1,57 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <section class="login-card">
-    <div class="login-copy">
-      <p class="eyebrow">Padusan Analytics</p>
-      <h2>Masuk ke dashboard analisis bundling yang lebih rapi dan siap pakai</h2>
-      <p>
-        Sistem ini membaca file transaksi wisata, membersihkannya, menjalankan
-        Agglomerative Hierarchical Clustering, lalu merumuskan strategi paket
-        berbasis seasonality.
-      </p>
-      <div class="hero-badge-row">
-        <span class="hero-badge">AHC Ward</span>
-        <span class="hero-badge">Silhouette Score</span>
-        <span class="hero-badge">PDF Report</span>
-      </div>
-      <div class="login-feature-list">
-        <article class="mini-feature">
-          <strong>Unggah dataset harian</strong>
-          <span>File Excel atau CSV langsung diproses ke matriks harian.</span>
-        </article>
-        <article class="mini-feature">
-          <strong>Interpretasi cluster otomatis</strong>
-          <span>Setiap cluster diberi profil, label, dan rekomendasi bundling.</span>
-        </article>
-        <article class="mini-feature">
-          <strong>Riwayat dan laporan</strong>
-          <span>Hasil analisis dapat disimpan, ditinjau ulang, dan diunduh.</span>
-        </article>
-      </div>
-      <div class="login-note">
-        <strong>Akun demo</strong>
-        <span>stafit / Padusan2026!</span>
-        <span>marketing / Padusan2026!</span>
+  <section class="row g-4 align-items-stretch">
+    <div class="col-12 col-xl-7">
+      <div class="card app-card hero-card h-100 border-0 shadow-sm">
+        <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-center gap-4">
+          <div>
+            <p class="eyebrow mb-2">Padusan Analytics</p>
+            <h2 class="section-title mb-3">Masuk ke dashboard analisis bundling yang lebih mudah dipahami</h2>
+            <p class="text-secondary mb-0">
+              Sistem ini membantu membaca data transaksi wisata, menjalankan proses
+              clustering AHC, lalu menyajikan hasil analisis dan rekomendasi bundling
+              dengan tampilan yang lebih terstruktur.
+            </p>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge rounded-pill app-badge app-badge-primary px-3 py-2">AHC Ward</span>
+            <span class="badge rounded-pill app-badge app-badge-accent px-3 py-2">Silhouette Score</span>
+            <span class="badge rounded-pill app-badge app-badge-rose px-3 py-2">PDF Report</span>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="mini-panel h-100">
+                <h3 class="h6 mb-2">Unggah dataset harian</h3>
+                <p class="small text-secondary mb-0">File Excel atau CSV langsung diproses ke matriks harian.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mini-panel h-100">
+                <h3 class="h6 mb-2">Interpretasi cluster</h3>
+                <p class="small text-secondary mb-0">Setiap cluster diberi profil, label, dan rekomendasi bundling.</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="mini-panel h-100">
+                <h3 class="h6 mb-2">Riwayat dan laporan</h3>
+                <p class="small text-secondary mb-0">Hasil analisis bisa disimpan, ditinjau ulang, dan diunduh.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-panel">
+            <strong class="d-block mb-2">Akun demo</strong>
+            <div class="small text-secondary">stafit / Padusan2026!</div>
+            <div class="small text-secondary">marketing / Padusan2026!</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <form method="post" class="panel login-form-panel">
-      <div class="form-head">
-        <p class="eyebrow">Akses Sistem</p>
-        <h3>Login Pengguna</h3>
-        <p class="muted">Masukkan akun yang tersedia untuk membuka dashboard analitik.</p>
+    <div class="col-12 col-xl-5">
+      <div class="card app-card border-0 shadow-sm h-100">
+        <div class="card-body p-4 p-lg-5 d-flex flex-column justify-content-center">
+          <div class="mb-4">
+            <p class="eyebrow mb-2">Akses Sistem</p>
+            <h3 class="section-title h4 mb-2">Login Pengguna</h3>
+            <p class="text-secondary mb-0">Masukkan akun yang tersedia untuk membuka dashboard analitik.</p>
+          </div>
+
+          <form method="post" class="vstack gap-3">
+            <div>
+              <label for="username" class="form-label fw-semibold">Username</label>
+              <input id="username" type="text" name="username" class="form-control form-control-lg" placeholder="stafit" required>
+            </div>
+            <div>
+              <label for="password" class="form-label fw-semibold">Password</label>
+              <input id="password" type="password" name="password" class="form-control form-control-lg" placeholder="Padusan2026!" required>
+            </div>
+            <div class="form-text">Gunakan akun demo untuk mencoba dashboard, riwayat analisis, dan unduh laporan.</div>
+            <button type="submit" class="btn app-btn-primary btn-lg w-100 rounded-4">Masuk ke Sistem</button>
+          </form>
+        </div>
       </div>
-      <label>
-        Username
-        <input type="text" name="username" placeholder="stafit" required>
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" placeholder="Padusan2026!" required>
-      </label>
-      <p class="field-hint">Gunakan akun demo untuk mencoba tampilan dashboard, riwayat analisis, dan unduh laporan.</p>
-      <button type="submit">Masuk ke Sistem</button>
-    </form>
+    </div>
   </section>
 {% endblock %}

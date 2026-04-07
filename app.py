@@ -163,8 +163,7 @@ def dashboard():
             analysis = inflate_analysis(record)
             session["current_analysis_id"] = analysis_id
 
-    history_preview = [inflate_analysis(row) for row in fetch_recent_history(limit=5)]
-    return render_template("dashboard.html", analysis=analysis, history_preview=history_preview)
+    return render_template("dashboard.html", analysis=analysis)
 
 
 @app.route("/analyze", methods=["POST"])

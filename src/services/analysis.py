@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import io
 import math
 import re
 from collections import Counter
 from pathlib import Path
+from zipfile import BadZipFile, ZIP_DEFLATED, ZipFile
 
 import matplotlib
 
@@ -198,6 +200,36 @@ def infer_segment(row: dict, weekend_share: float) -> tuple[str, str, str, str]:
     )
 
 
+def get_segment_descriptions(segment_label: str) -> tuple[str, str]:
+    descriptions = {
+        "High Season / Peak Days": (
+            "Cluster ini menunjukkan intensitas kunjungan yang tinggi, terutama pada tiket masuk, parkir, dan wahana air. Oleh karena itu, sistem merekomendasikan Paket Terusan Wahana Air untuk memaksimalkan transaksi pada periode ramai.",
+            "Berdasarkan profil cluster, permintaan pada kategori tiket masuk, parkir, dan wahana air berada pada tingkat tinggi. Kondisi ini menunjukkan adanya periode kunjungan puncak, sehingga sistem merekomendasikan Paket Terusan Wahana Air sebagai strategi bundling yang paling sesuai. Rekomendasi ini ditujukan untuk mengoptimalkan nilai transaksi pada saat volume kunjungan sedang tinggi.",
+        ),
+        "Staycation / Weekend Pattern": (
+            "Cluster ini menunjukkan dominasi layanan akomodasi dan cenderung terkait dengan aktivitas akhir pekan. Oleh karena itu, sistem merekomendasikan Paket Camping Adventure karena lebih sesuai dengan pola kunjungan berbasis pengalaman menginap.",
+            "Berdasarkan hasil profiling, cluster ini memiliki kecenderungan kuat pada kategori akomodasi dan menunjukkan pola kunjungan yang mengarah pada akhir pekan. Dengan karakteristik tersebut, sistem merekomendasikan Paket Camping Adventure karena kombinasi tiket masuk dan akomodasi dinilai paling sesuai dengan kebutuhan pengunjung pada cluster ini. Strategi ini diarahkan untuk mendukung kunjungan bertema staycation atau rekreasi akhir pekan.",
+        ),
+        "Premium Wellness Pattern": (
+            "Cluster ini menunjukkan minat yang lebih tinggi pada layanan VIP atau premium wellness. Oleh karena itu, sistem merekomendasikan Paket Premium Onsen untuk menyesuaikan strategi bundling dengan preferensi layanan privat dan eksklusif.",
+            "Cluster ini ditandai oleh dominasi layanan De Qoem (VIP), yang menunjukkan adanya kecenderungan permintaan terhadap pengalaman wisata yang lebih privat dan premium. Berdasarkan kondisi tersebut, sistem merekomendasikan Paket Premium Onsen sebagai strategi bundling yang paling relevan. Rekomendasi ini ditujukan untuk menyesuaikan penawaran dengan preferensi pengunjung yang mencari layanan eksklusif.",
+        ),
+        "Low Season / Weekday": (
+            "Cluster ini menunjukkan tingkat permintaan yang relatif rendah pada kategori utama. Oleh karena itu, sistem merekomendasikan Paket Hemat Weekday untuk membantu mendorong minat kunjungan pada periode permintaan rendah.",
+            "Berdasarkan profil cluster, permintaan pada kategori utama seperti tiket masuk, parkir, dan wahana air berada pada tingkat relatif rendah. Kondisi ini menunjukkan periode kunjungan yang lebih sepi, sehingga sistem merekomendasikan Paket Hemat Weekday sebagai strategi bundling yang lebih sederhana dan efisien. Rekomendasi ini bertujuan untuk meningkatkan daya tarik kunjungan pada periode permintaan rendah.",
+        ),
+        "Mixed Leisure Pattern": (
+            "Cluster ini menunjukkan pola kunjungan yang campuran dan tidak didominasi oleh satu kategori layanan tertentu. Oleh karena itu, sistem merekomendasikan Paket Fleksibel Keluarga agar penawaran tetap relevan untuk kebutuhan pengunjung yang beragam.",
+            "Cluster ini menunjukkan karakteristik permintaan yang bersifat campuran, tanpa dominasi yang sangat kuat pada satu kategori layanan tertentu. Dengan pola tersebut, sistem merekomendasikan Paket Fleksibel Keluarga sebagai strategi bundling yang lebih adaptif terhadap variasi kebutuhan pengunjung. Rekomendasi ini ditujukan untuk menjaga relevansi penawaran pada kondisi permintaan yang heterogen.",
+        ),
+    }
+    fallback = (
+        "Cluster ini menghasilkan rekomendasi bundling berdasarkan profil kunjungan yang terbentuk dari data historis.",
+        "Cluster ini menghasilkan rekomendasi bundling berdasarkan profil kunjungan yang terbentuk dari data historis, sehingga strategi yang disarankan mengikuti pola aktual dalam data.",
+    )
+    return descriptions.get(segment_label, fallback)
+
+
 def calculate_cut_height(linkage_matrix, cluster_count: int) -> float | None:
     total_samples = linkage_matrix.shape[0] + 1
     if cluster_count <= 1 or cluster_count > total_samples:
@@ -340,6 +372,7 @@ def cluster_and_profile(raw_matrix: pd.DataFrame, normalized_matrix: pd.DataFram
         )
 
         segment_label, package_name, package_components, target_season = infer_segment(centroid, weekend_share)
+        recommendation_reason_short, recommendation_reason_formal = get_segment_descriptions(segment_label)
         profile_text = build_profile_text(centroid, weekend_share)
         dominant_features = [
             field
@@ -356,6 +389,8 @@ def cluster_and_profile(raw_matrix: pd.DataFrame, normalized_matrix: pd.DataFram
                 "package_components": package_components,
                 "target_season": target_season,
                 "profile_text": profile_text,
+                "recommendation_reason_short": recommendation_reason_short,
+                "recommendation_reason_formal": recommendation_reason_formal,
                 "dominant_features": dominant_features[:3],
                 "weekend_share": weekend_share,
                 "day_count": int(len(cluster_dates)),
@@ -389,12 +424,70 @@ def evaluate_candidates(normalized_matrix: pd.DataFrame):
     return scores, recommended
 
 
+def repair_xlsx_styles(source_path: Path) -> io.BytesIO | None:
+    try:
+        with ZipFile(source_path, "r") as source_archive:
+            if "xl/styles.xml" not in source_archive.namelist():
+                return None
+
+            repaired_stream = io.BytesIO()
+            repaired = False
+            with ZipFile(repaired_stream, "w", compression=ZIP_DEFLATED) as target_archive:
+                for item in source_archive.infolist():
+                    payload = source_archive.read(item.filename)
+                    if item.filename == "xl/styles.xml":
+                        styles_xml = payload.decode("utf-8", errors="replace")
+                        updated_xml = styles_xml.replace(
+                            "<fill/>",
+                            '<fill><patternFill patternType="gray125"/></fill>',
+                        )
+                        if updated_xml != styles_xml:
+                            repaired = True
+                            payload = updated_xml.encode("utf-8")
+                    target_archive.writestr(item, payload)
+
+            if not repaired:
+                return None
+
+            repaired_stream.seek(0)
+            return repaired_stream
+    except BadZipFile:
+        return None
+
+
 def load_dataset(source_path: Path) -> pd.DataFrame:
     suffix = source_path.suffix.lower()
     if suffix == ".csv":
-        return pd.read_csv(source_path)
+        try:
+            return pd.read_csv(source_path)
+        except Exception as exc:
+            raise AnalysisError(
+                "File CSV tidak dapat dibaca. Pastikan format file valid dan tidak sedang rusak."
+            ) from exc
     if suffix in {".xlsx", ".xlsm"}:
-        return pd.read_excel(source_path)
+        try:
+            return pd.read_excel(source_path)
+        except Exception as exc:
+            message = str(exc)
+            if "openpyxl.styles.fills.Fill" in message or "Fill() takes no arguments" in message:
+                repaired_stream = repair_xlsx_styles(source_path)
+                if repaired_stream is not None:
+                    try:
+                        return pd.read_excel(repaired_stream)
+                    except Exception as repaired_exc:
+                        raise AnalysisError(
+                            "File Excel berhasil dideteksi, tetapi format style workbook rusak sehingga data tetap tidak bisa dibaca. "
+                            "Silakan simpan ulang file tersebut sebagai .xlsx atau ekspor ke .csv lalu unggah kembali."
+                        ) from repaired_exc
+
+                raise AnalysisError(
+                    "File Excel tidak dapat dibaca karena format style workbook rusak. "
+                    "Silakan simpan ulang file tersebut sebagai .xlsx atau ekspor ke .csv lalu unggah kembali."
+                ) from exc
+
+            raise AnalysisError(
+                "File Excel tidak dapat dibaca. Pastikan file valid, tidak sedang terbuka/korup, dan berformat .xlsx."
+            ) from exc
     raise AnalysisError("Format file belum didukung. Gunakan `.xlsx` atau `.csv`.")
 
 

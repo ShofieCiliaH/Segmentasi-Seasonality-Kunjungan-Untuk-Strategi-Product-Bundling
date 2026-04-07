@@ -3,75 +3,7 @@
 {% block content %}
   <section class="dashboard-grid">
     <aside class="sidebar">
-      <article class="panel panel-soft">
-        <p class="eyebrow">Panel Kontrol</p>
-        <h2>Unggah data dan jalankan analisis</h2>
-        <p class="muted">Pilih file transaksi terbaru atau gunakan sumber data sebelumnya untuk simulasi ulang jumlah cluster.</p>
-        <form method="post" action="{{ url_for('analyze') }}" enctype="multipart/form-data" class="stack-form">
-          <label>
-            File transaksi (.xlsx / .csv)
-            <input type="file" name="data_file" accept=".xlsx,.csv">
-          </label>
-
-          <label>
-            Manual override jumlah cluster
-            <input
-              type="number"
-              name="manual_k"
-              min="2"
-              max="{{ analysis.candidate_scores[-1].k if analysis else 6 }}"
-              value="{{ analysis.active_k if analysis else '' }}"
-              placeholder="Kosongkan untuk rekomendasi otomatis">
-          </label>
-          <p class="field-hint">Biarkan kosong jika ingin sistem memilih nilai k terbaik berdasarkan silhouette score.</p>
-
-          {% if analysis %}
-            <input type="hidden" name="source_path" value="{{ analysis.source_path }}">
-            <input type="hidden" name="source_name" value="{{ analysis.source_name }}">
-          {% endif %}
-
-          <button type="submit">{{ "Terapkan / Update" if analysis else "Upload & Analisis" }}</button>
-        </form>
-      </article>
-
-      <article class="panel panel-soft">
-        <p class="eyebrow">Status Sistem</p>
-        {% if analysis %}
-          <ul class="metric-list">
-            <li><span>File aktif</span><strong>{{ analysis.source_name }}</strong></li>
-            <li><span>k rekomendasi</span><strong>{{ analysis.recommended_k }}</strong></li>
-            <li><span>k aktif</span><strong>{{ analysis.active_k }}</strong></li>
-            <li><span>Silhouette</span><strong>{{ analysis.active_silhouette }}</strong></li>
-            <li><span>Hari dianalisis</span><strong>{{ analysis.days_analysed }}</strong></li>
-          </ul>
-        {% else %}
-          <p class="muted">
-            Belum ada analisis aktif. Unggah file transaksi terlebih dahulu untuk melihat
-            rekomendasi cluster, dendrogram, dan formulasi bundling.
-          </p>
-        {% endif %}
-      </article>
-
-      <article class="panel panel-soft">
-        <p class="eyebrow">Riwayat Cepat</p>
-        {% if history_preview %}
-          <div class="history-preview">
-            {% for item in history_preview %}
-              <a href="{{ url_for('history_detail', history_id=item.history_id) }}" class="history-item">
-                <strong>{{ item.source_name }}</strong>
-                <span>{{ item.tanggal_proses }}</span>
-                <small>{{ item.summary }}</small>
-              </a>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p class="muted">Riwayat analisis akan muncul di sini setelah eksekusi pertama.</p>
-        {% endif %}
-      </article>
-    </aside>
-
-    <section class="content-area">
-      <article class="hero panel panel-hero">
+      <article class="hero panel panel-hero guide-panel">
         <div class="hero-grid">
           <div class="hero-copy">
             <p class="eyebrow">{{ "Dashboard Terintegrasi" if analysis else "Panduan Mulai" }}</p>
@@ -127,6 +59,66 @@
             {% endif %}
           </div>
         </div>
+      </article>
+
+      <article class="panel panel-soft">
+        <p class="eyebrow">Status Sistem</p>
+        {% if analysis %}
+          <ul class="metric-list">
+            <li><span>File aktif</span><strong>{{ analysis.source_name }}</strong></li>
+            <li><span>k rekomendasi</span><strong>{{ analysis.recommended_k }}</strong></li>
+            <li><span>k aktif</span><strong>{{ analysis.active_k }}</strong></li>
+            <li><span>Silhouette</span><strong>{{ analysis.active_silhouette }}</strong></li>
+            <li><span>Hari dianalisis</span><strong>{{ analysis.days_analysed }}</strong></li>
+          </ul>
+        {% else %}
+          <p class="muted">
+            Belum ada analisis aktif. Unggah file transaksi terlebih dahulu untuk melihat
+            rekomendasi cluster, dendrogram, dan formulasi bundling.
+          </p>
+        {% endif %}
+      </article>
+
+    </aside>
+
+    <section class="content-area">
+      <article class="panel panel-soft control-panel-wide">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Panel Kontrol</p>
+            <h2>Unggah data dan jalankan analisis</h2>
+            <p class="muted">Pilih file transaksi terbaru atau gunakan sumber data sebelumnya untuk simulasi ulang jumlah cluster.</p>
+          </div>
+        </div>
+        <form method="post" action="{{ url_for('analyze') }}" enctype="multipart/form-data" class="stack-form stack-form-wide">
+          <div class="form-grid-two">
+            <label>
+              File transaksi (.xlsx / .csv)
+              <input type="file" name="data_file" accept=".xlsx,.csv">
+            </label>
+
+            <label>
+              Manual override jumlah cluster
+              <input
+                type="number"
+                name="manual_k"
+                min="2"
+                max="{{ analysis.candidate_scores[-1].k if analysis else 6 }}"
+                value="{{ analysis.active_k if analysis else '' }}"
+                placeholder="Kosongkan untuk rekomendasi otomatis">
+            </label>
+          </div>
+          <p class="field-hint">Biarkan kosong jika ingin sistem memilih nilai k terbaik berdasarkan silhouette score.</p>
+
+          {% if analysis %}
+            <input type="hidden" name="source_path" value="{{ analysis.source_path }}">
+            <input type="hidden" name="source_name" value="{{ analysis.source_name }}">
+          {% endif %}
+
+          <div class="form-actions">
+            <button type="submit">{{ "Terapkan / Update" if analysis else "Upload & Analisis" }}</button>
+          </div>
+        </form>
       </article>
 
       {% if analysis %}
@@ -190,6 +182,10 @@
                   <span class="cluster-days">{{ cluster.day_count }} hari</span>
                 </div>
                 <p>{{ cluster.profile_text }}</p>
+                <div class="cluster-summary">
+                  <span>Alasan rekomendasi</span>
+                  <p>{{ cluster.recommendation_reason_short }}</p>
+                </div>
                 <ul class="detail-list">
                   <li><span>Paket</span><strong>{{ cluster.package_name }}</strong></li>
                   <li><span>Komposisi</span><strong>{{ cluster.package_components }}</strong></li>

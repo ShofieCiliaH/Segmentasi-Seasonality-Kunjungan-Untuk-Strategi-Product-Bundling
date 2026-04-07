@@ -4,41 +4,63 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ app_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 </head>
-<body>
+<body class="app-body">
   <div class="page-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">PW</div>
-        <div class="brand-copy">
-          <p class="eyebrow">Sistem Analisis Skripsi</p>
-          <h1>{{ app_name }}</h1>
-          <p class="brand-subtitle">Segmentasi seasonality kunjungan dan strategi product bundling berbasis data historis.</p>
-        </div>
-      </div>
-      {% if current_user %}
-        <nav class="topnav">
-          <a href="{{ url_for('dashboard') }}" class="topnav-link {{ 'is-active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
-          <a href="{{ url_for('history') }}" class="topnav-link {{ 'is-active' if request.endpoint in ['history', 'history_detail'] else '' }}">Riwayat</a>
-          <div class="topnav-actions">
-            <div class="user-badge">
-              <span>{{ current_user["nama_lengkap"] }}</span>
-              <small>{{ current_user["role"] }}</small>
-            </div>
-            <form method="post" action="{{ url_for('logout') }}">
-              <button type="submit" class="ghost-button">Logout</button>
-            </form>
+    <nav class="navbar navbar-expand-lg app-navbar mb-4">
+      <div class="container-fluid px-0">
+        <a class="navbar-brand navbar-brand-text me-0" href="{{ url_for('dashboard') if current_user else url_for('login') }}">
+          Segmentasi seasonality kunjungan dan strategi product bundling berbasis data historis.
+        </a>
+
+        {% if current_user %}
+          <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="collapse" data-bs-target="#appNavbar" aria-controls="appNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="appNavbar">
+            <ul class="navbar-nav align-items-lg-center gap-lg-2">
+              <li class="nav-item">
+                <a href="{{ url_for('dashboard') }}" class="nav-link app-nav-link {{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url_for('history') }}" class="nav-link app-nav-link {{ 'active' if request.endpoint in ['history', 'history_detail'] else '' }}">Riwayat</a>
+              </li>
+              <li class="nav-item">
+                <div class="user-badge mt-3 mt-lg-0">
+                  <span>{{ current_user["nama_lengkap"] }}</span>
+                  <small>{{ current_user["role"] }}</small>
+                </div>
+              </li>
+              <li class="nav-item">
+                <form method="post" action="{{ url_for('logout') }}" class="mt-3 mt-lg-0">
+                  <button type="submit" class="btn app-btn-outline rounded-pill px-3">Logout</button>
+                </form>
+              </li>
+            </ul>
           </div>
-        </nav>
-      {% endif %}
-    </header>
+        {% endif %}
+      </div>
+    </nav>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <section class="flash-stack">
           {% for category, message in messages %}
-            <article class="flash flash-{{ category }}">{{ message }}</article>
+            {% set alert_type = 'success' if category == 'success' else 'danger' if category == 'error' else 'warning' %}
+            <div class="alert alert-{{ alert_type }} alert-dismissible fade show rounded-4 border-0 shadow-sm mb-0" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
           {% endfor %}
         </section>
       {% endif %}
@@ -48,5 +70,10 @@
       {% block content %}{% endblock %}
     </main>
   </div>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
